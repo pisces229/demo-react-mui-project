@@ -10,19 +10,9 @@
 
 [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi/related)
 
-### Install
-
-`npm install -g create-react-app`
-
-### Create
-
-To start a new Create React App project with TypeScript:
+### [Create React App](https://create-react-app.dev/)
 
 `npx create-react-app <name> --template typescript`
-
-To add TypeScript to an existing Create React App project:
-
-`npm install --save typescript @types/node @types/react @types/react-dom @types/jest`
 
 ### Package
 

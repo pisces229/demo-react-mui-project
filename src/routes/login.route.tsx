@@ -1,6 +1,5 @@
-import { lazy } from 'react';
 import { RouteObject, useRoutes } from 'react-router-dom';
-import { LoginPage } from '../pages/login/login.page';
+import { LoginPage } from '../views/login/login.page';
 
 export function LoginRoute() {
   let routeObject: RouteObject[] = [

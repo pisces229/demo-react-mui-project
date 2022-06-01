@@ -8,11 +8,11 @@ export function App() {
   return (
     <>
       {/* <h1>Demo React MUI Project App</h1> */}
-      <Provider store={store}>
-        <BrowserRouter>
-          <RootRoute />
-        </BrowserRouter>
-      </Provider>
+      {/* <Provider store={store}> */}
+      <BrowserRouter>
+        <RootRoute />
+      </BrowserRouter>
+      {/* </Provider> */}
     </>
   );
 }
