@@ -1,6 +1,23 @@
 import axios from 'axios';
+interface Refresh {
+  do: boolean;
+  queue: (() => void)[];
+  push: (callback: () => void) => void;
+  run: () => void;
+}
+const refresh: Refresh = {
+  do: false,
+  queue: [],
+  push: (callback: () => void) => {
+    refresh.queue.push(callback);
+  },
+  run: () => {
+    refresh.do = false;
+    refresh.queue.forEach((callback) => callback());
+    refresh.queue.length = 0;
+  },
+};
 const BASE_URL = 'https://localhost:9100';
-
 const CommonAuthAxios = axios.create({
   baseURL: BASE_URL,
   headers: {
@@ -26,47 +43,34 @@ CommonAuthAxios.interceptors.response.use(
   },
   async (error) => {
     const originalConfig = error.config;
-    if (error.response.status === 401 && !originalConfig._retry) {
-      originalConfig._retry = true;
-      if (!DoingRefresh()) {
-        await RunRefresh();
-      } else {
-        let reTryCount = 0;
-        while (DoingRefresh() && reTryCount < 8) {
-          await WaitRefresh();
-          ++reTryCount;
-        }
-      }
+    // if (error.response.status === 401 && !originalConfig._retry) {
+    //   originalConfig._retry = true;
+    if (error.response.status === 401) {
       if (localStorage.getItem('token')) {
-        return CommonAuthAxios(originalConfig);
+        if (!refresh.do) {
+          refresh.do = true;
+          doRefresh();
+        }
+        return new Promise((resolve, reject) => {
+          refresh.push(() => {
+            resolve(CommonAuthAxios(originalConfig));
+          });
+        });
       } else {
         return Promise.reject(error);
       }
+    } else {
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
   },
 );
-// Refresh
-const RunRefresh = async () => {
-  try {
-    localStorage.setItem('refresh', `${true}`);
-    const refreshResponse = await CommonAuthAxios.post(
-      '/Refresh',
-      JSON.stringify(localStorage.getItem('token')!),
-    );
-    if (refreshResponse.status === 200) {
-      console.log(refreshResponse.headers['content-type']);
-      localStorage.setItem('token', refreshResponse.data);
-    } else {
-      localStorage.removeItem('token');
-    }
-  } finally {
-    localStorage.removeItem('refresh');
-  }
+const doRefresh = () => {
+  CommonAuthAxios.post(
+    '/Refresh',
+    JSON.stringify(localStorage.getItem('token')!),
+  )
+  .then((value) => localStorage.setItem('token', value.data))
+  .catch((error) => localStorage.removeItem('token'))
+  .finally(() => refresh.run());
 };
-const DoingRefresh = () => localStorage.getItem('refresh');
-const WaitRefresh = () =>
-  new Promise((resolve) =>
-    setTimeout(() => resolve(!!localStorage.getItem('refresh')), 500),
-  );
 export { CommonAuthAxios };

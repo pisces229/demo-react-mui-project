@@ -61,6 +61,20 @@ export function LayoutPage() {
       .catch((error) => console.log(error))
       .finally(() => console.log(`DefaultService.auth.finally`));
   };
+  const onClickMultipleAuth = () => {
+    DefaultService.auth()
+    .then((response) => console.log('1.then', response))
+    .catch((error) => console.log('1.catch', error))
+    .finally(() => console.log(`1.finally`));
+    DefaultService.auth()
+    .then((response) => console.log('2.then', response))
+    .catch((error) => console.log('2.catch', error))
+    .finally(() => console.log(`2.finally`));
+    DefaultService.auth()
+    .then((response) => console.log('3.then', response))
+    .catch((error) => console.log('3.catch', error))
+    .finally(() => console.log(`3.finally`));
+  };
   const onClickQuit = async () => {
     navigate(ROUTE_LOGIN);
   };
@@ -103,6 +117,9 @@ export function LayoutPage() {
       </button>
       <button type="button" onClick={onClickAuth}>
         Auth
+      </button>
+      <button type="button" onClick={onClickMultipleAuth}>
+        MultipleAuth
       </button>
       <button type="button" onClick={onClickQuit}>
         Quit
