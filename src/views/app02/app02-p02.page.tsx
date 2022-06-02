@@ -19,7 +19,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { CommonState } from '../../common/common-state';
 import { ROUTE_APP02 } from '../../routes/app02.route';
 import { DefaultService } from '../../services/default.service';
-import { FileListToFileArray } from '../../utils/file.util';
+import { FileUtilListToArray } from '../../utils/file.util';
 import { App02P01EntryAction } from './app02-p01.page';
 
 // Action
@@ -262,7 +262,7 @@ const Page = () => {
                     hidden
                     onChange={async (event) =>
                       formDispatch({
-                        FileValue: FileListToFileArray(event.target.files),
+                        FileValue: FileUtilListToArray(event.target.files),
                       })
                     }
                   />

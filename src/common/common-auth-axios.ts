@@ -21,6 +21,7 @@ const BASE_URL = 'https://localhost:9100';
 const CommonAuthAxios = axios.create({
   baseURL: BASE_URL,
   headers: {
+    'Cache-Control': 'no-cache',
     'Content-Type': 'application/json',
   },
 });
@@ -57,9 +58,11 @@ CommonAuthAxios.interceptors.response.use(
           });
         });
       } else {
+        console.log(error);
         return Promise.reject(error);
       }
     } else {
+      console.log(error);
       return Promise.reject(error);
     }
   },

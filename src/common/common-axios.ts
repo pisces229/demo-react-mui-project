@@ -3,6 +3,7 @@ const BASE_URL = 'https://localhost:9100';
 const CommonAxios = axios.create({
   baseURL: BASE_URL,
   headers: {
+    'Cache-Control': 'no-cache',
     'Content-Type': 'application/json',
   },
 });

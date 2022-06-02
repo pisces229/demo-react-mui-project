@@ -20,7 +20,7 @@ import { CommonState } from '../../common/common-state';
 import { ROUTE_APP01 } from '../../routes/app01.route';
 import { DefaultService } from '../../services/default.service';
 import { App01P01EntryAction } from './app01-p01.page';
-import { FileListToFileArray } from '../../utils/file.util';
+import { FileUtilListToArray } from '../../utils/file.util';
 
 // Action
 enum EntryAction {
@@ -279,7 +279,7 @@ const Page = () => {
                     onChange={async (event) =>
                       setFormState((state) => ({
                         ...state,
-                        FileValue: FileListToFileArray(event.target.files),
+                        FileValue: FileUtilListToArray(event.target.files),
                       }))
                     }
                   />

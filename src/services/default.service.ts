@@ -10,14 +10,14 @@ export interface DefaultAjaxJsonFromModel {
 // Service
 export const DefaultService = {
   // Test
-  free: () => CommonAxios.get<string>(`/Free`),
-  auth: () => CommonAuthAxios.get<string>(`/Auth`),
+  free: () => CommonAxios.get<string>(`/free`),
+  auth: () => CommonAuthAxios.get<string>(`/auth`),
   // Auth
   signIn: (postData: { Account: string; Password: string }) =>
-    CommonAxios.post<number>(`/SignIn`, postData),
-  validate: () => CommonAuthAxios.get(`/Validate`),
-  refresh: (postData: number) => CommonAxios.post<number>(`/Refresh`, postData),
-  signOut: () => CommonAxios.post(`/SignOut`),
+    CommonAxios.post<number>(`/signIn`, postData),
+  validate: () => CommonAuthAxios.get(`/validate`),
+  refresh: (postData: number) => CommonAxios.post<number>(`/refresh`, postData),
+  signOut: () => CommonAxios.post(`/signOut`),
   // Value
   valueFromQuery: (value: string) =>
     CommonAxios.get<string>(`/valueFromQuery`, { params: { model: value } }),
@@ -29,4 +29,8 @@ export const DefaultService = {
     }),
   jsonFromBody: (value: DefaultAjaxJsonFromModel) =>
     CommonAxios.post<DefaultAjaxJsonFromModel>(`/jsonFromBody`, value),
+  download: () => CommonAxios.get<Blob>(`/download`),
+  // download: () => CommonAuthAxios.get<Blob>(`/download`),
+  // jsonFromBody: (value: DefaultAjaxJsonFromModel) =>
+  //   CommonAxios.post<DefaultAjaxJsonFromModel>(`/jsonFromBody`, value),
 };

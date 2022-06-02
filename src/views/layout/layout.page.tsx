@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { ROUTE_LOGIN } from '../../routes/login.route';
 import { DefaultService } from '../../services/default.service';
+import { FileUtilDownload } from '../../utils/file.util';
 
 const Menu = styled.ul`
   padding: 0px;
@@ -75,6 +76,13 @@ export function LayoutPage() {
     .catch((error) => console.log('3.catch', error))
     .finally(() => console.log(`3.finally`));
   };
+  const onClickDownload = async () => {
+    DefaultService.download()
+      .then((response) => FileUtilDownload(response))
+      .then((message) => console.log(message))
+      .catch((error) => console.log(error))
+      .finally(() => console.log(`DefaultService.download.finally`));
+  };
   const onClickQuit = async () => {
     navigate(ROUTE_LOGIN);
   };
@@ -120,6 +128,9 @@ export function LayoutPage() {
       </button>
       <button type="button" onClick={onClickMultipleAuth}>
         MultipleAuth
+      </button>
+      <button type="button" onClick={onClickDownload}>
+        Download
       </button>
       <button type="button" onClick={onClickQuit}>
         Quit
