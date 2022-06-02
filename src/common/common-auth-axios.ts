@@ -69,7 +69,7 @@ CommonAuthAxios.interceptors.response.use(
 );
 const doRefresh = () => {
   CommonAuthAxios.post(
-    '/Refresh',
+    '/refresh',
     JSON.stringify(localStorage.getItem('token')!),
   )
   .then((value) => localStorage.setItem('token', value.data))
