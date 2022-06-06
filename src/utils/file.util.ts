@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { AxiosResponse } from 'axios';
 
 export const FileUtilListToArray = (fileList: FileList | null) => {
   let result: File[] = [];

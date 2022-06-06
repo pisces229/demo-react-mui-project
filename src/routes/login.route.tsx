@@ -12,4 +12,4 @@ export function LoginRoute() {
   return <>{element}</>;
 }
 
-export const ROUTE_LOGIN = '/';
+export const RouteLogin = '/';

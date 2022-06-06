@@ -1,140 +1,95 @@
+import { Button, createTheme, styled } from '@mui/material';
 import { Outlet, useNavigate } from 'react-router';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { ROUTE_LOGIN } from '../../routes/login.route';
-import { DefaultService } from '../../services/default.service';
-import { FileUtilDownload } from '../../utils/file.util';
+import {
+  Box,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Toolbar,
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import { RouteLogin } from '../../routes/login.route';
+import { RouteHome } from '../../routes/home.route';
+import { RouteApp01 } from '../../routes/app01.route';
+import { RouteApp02 } from '../../routes/app02.route';
+import { useState } from 'react';
 
-const Menu = styled.ul`
-  padding: 0px;
-`;
+const items = [
+  // { text: 'Home', path: RouteHome },
+  { text: 'App01P01', path: RouteApp01.P01 },
+  { text: 'App01P02', path: RouteApp01.P02 },
+  { text: 'App01NoMatch', path: RouteApp01.NoMatch },
+  { text: 'App02P01', path: RouteApp02.P01 },
+  { text: 'App02P02', path: RouteApp02.P02 },
+  { text: 'App02NoMatch', path: RouteApp02.NoMatch },
+];
 
-const MenuItem = styled.li`
-  display: inline;
-  padding: 5px;
-`;
+// const LayoutToolbarTheme = createTheme({
+//   components: {
+//     MuiToolbar: {
+//       defaultProps: {
+//         // disabled: true,
+//       },
+//       styleOverrides: {
+//         root: {
+//           padding: '0px',
+//         },
+//       },
+//       variants: [],
+//     },
+//   },
+// });
+// styled
+const LayoutToolbar = styled(Toolbar)({
+  '&.MuiToolbar-root': {
+    padding: '0px',
+  },
+});
 
 export function LayoutPage() {
   const navigate = useNavigate();
-  const onClickSignIn = async () => {
-    await DefaultService.signIn({ Account: 'Account', Password: 'Password' })
-      .then((response) => {
-        console.log(response);
-        if (response.status === 200) {
-          localStorage.setItem('token', response.data.toString());
-        }
-      })
-      .catch((error) => console.log(error))
-      .finally(() => console.log(`DefaultService.signIn.finally`));
-  };
-  const onClickValidate = async () => {
-    await DefaultService.validate()
-      .then((response) => console.log(response))
-      .catch((error) => console.log(error))
-      .finally(() => console.log(`DefaultService.validate.finally`));
-  };
-  const onClickRefresh = async () => {
-    if (localStorage.getItem('token')) {
-      await DefaultService.refresh(parseInt(localStorage.getItem('token')!))
-        .then((response) => console.log(response))
-        .catch((error) => console.log(error))
-        .finally(() => console.log(`DefaultService.refresh.finally`));
-    }
-  };
-  const onClickSignOut = async () => {
-    await DefaultService.signOut()
-      .then((response) => {
-        console.log(response);
-        localStorage.removeItem('token');
-      })
-      .catch((error) => console.log(error))
-      .finally(() => console.log(`DefaultService.signOut.finally`));
-  };
-  const onClickFree = async () => {
-    await DefaultService.free()
-      .then((response) => console.log(response))
-      .catch((error) => console.log(error))
-      .finally(() => console.log(`DefaultService.free.finally`));
-  };
-  const onClickAuth = async () => {
-    await DefaultService.auth()
-      .then((response) => console.log(response))
-      .catch((error) => console.log(error))
-      .finally(() => console.log(`DefaultService.auth.finally`));
-  };
-  const onClickMultipleAuth = () => {
-    DefaultService.auth()
-    .then((response) => console.log('1.then', response))
-    .catch((error) => console.log('1.catch', error))
-    .finally(() => console.log(`1.finally`));
-    DefaultService.auth()
-    .then((response) => console.log('2.then', response))
-    .catch((error) => console.log('2.catch', error))
-    .finally(() => console.log(`2.finally`));
-    DefaultService.auth()
-    .then((response) => console.log('3.then', response))
-    .catch((error) => console.log('3.catch', error))
-    .finally(() => console.log(`3.finally`));
-  };
-  const onClickDownload = async () => {
-    DefaultService.download()
-      .then((response) => FileUtilDownload(response))
-      .then((message) => console.log(message))
-      .catch((error) => console.log(error))
-      .finally(() => console.log(`DefaultService.download.finally`));
-  };
-  const onClickQuit = async () => {
-    navigate(ROUTE_LOGIN);
-  };
+  const [state, setState] = useState<boolean>(false);
   return (
     <>
       <h2>Default Layout</h2>
-      <nav>
-        <Menu>
-          <MenuItem>
-            <Link to="">Home</Link>
-          </MenuItem>
-          <MenuItem>
-            <Link to="app01">App01</Link>
-          </MenuItem>
-          <MenuItem>
-            <Link to="app01/unknown">App01Unknown</Link>
-          </MenuItem>
-          <MenuItem>
-            <Link to="app02">App02</Link>
-          </MenuItem>
-          <MenuItem>
-            <Link to="app02/unknown">App02Unknown</Link>
-          </MenuItem>
-        </Menu>
-      </nav>
-      <button type="button" onClick={onClickSignIn}>
-        SignIn
-      </button>
-      <button type="button" onClick={onClickValidate}>
-        Validate
-      </button>
-      <button type="button" onClick={onClickRefresh}>
-        Refresh
-      </button>
-      <button type="button" onClick={onClickSignOut}>
-        SignOut
-      </button>
-      <button type="button" onClick={onClickFree}>
-        Free
-      </button>
-      <button type="button" onClick={onClickAuth}>
-        Auth
-      </button>
-      <button type="button" onClick={onClickMultipleAuth}>
-        MultipleAuth
-      </button>
-      <button type="button" onClick={onClickDownload}>
-        Download
-      </button>
-      <button type="button" onClick={onClickQuit}>
-        Quit
-      </button>
+      <LayoutToolbar>
+        <IconButton onClick={() => setState(true)}>
+          <MenuIcon />
+        </IconButton>
+        <Button variant="contained" onClick={() => navigate(RouteLogin)}>
+          Quit
+        </Button>
+      </LayoutToolbar>
+      <Drawer anchor={'left'} open={state} onClose={() => setState(false)}>
+        <Box
+          sx={{ width: 250 }}
+          role="presentation"
+          onClick={() => setState(false)}
+          onKeyDown={() => setState(false)}
+        >
+          <List>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => navigate(RouteHome)}>
+                <ListItemText primary={'Home'} />
+              </ListItemButton>
+            </ListItem>
+          </List>
+          <Divider />
+          <List>
+            {items.map((item, index) => (
+              <ListItem key={index} disablePadding>
+                <ListItemButton onClick={() => navigate(item.path)}>
+                  <ListItemText primary={item.text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      </Drawer>
       <Outlet />
     </>
   );

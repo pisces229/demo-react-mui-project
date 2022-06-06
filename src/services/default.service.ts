@@ -30,7 +30,5 @@ export const DefaultService = {
   jsonFromBody: (value: DefaultAjaxJsonFromModel) =>
     CommonAxios.post<DefaultAjaxJsonFromModel>(`/jsonFromBody`, value),
   download: () => CommonAxios.get<Blob>(`/download`),
-  // download: () => CommonAuthAxios.get<Blob>(`/download`),
-  // jsonFromBody: (value: DefaultAjaxJsonFromModel) =>
-  //   CommonAxios.post<DefaultAjaxJsonFromModel>(`/jsonFromBody`, value),
+  upload: (value: FormData) => CommonAuthAxios.post<string>(`/upload`, value),
 };

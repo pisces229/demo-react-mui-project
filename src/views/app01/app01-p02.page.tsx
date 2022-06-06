@@ -1,6 +1,8 @@
 import {
+  Alert,
   Button,
   Checkbox,
+  Grid,
   MenuItem,
   Radio,
   Select,
@@ -9,22 +11,25 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   TextField,
 } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import { CommonState } from '../../common/common-state';
-import { ROUTE_APP01 } from '../../routes/app01.route';
+import { RouteApp01 } from '../../routes/app01.route';
 import { DefaultService } from '../../services/default.service';
 import { App01P01EntryAction } from './app01-p01.page';
 import { FileUtilListToArray } from '../../utils/file.util';
+import { CommonConfirmComponent } from '../../components/common-confirm.component';
+import { commonMessageOpen } from '../../stores/common-message.store';
 
 // Action
 enum EntryAction {
   Empty,
+  Create,
   Modify,
 }
 // Model
@@ -58,23 +63,40 @@ const formInitial: FormModel = {
 const Page = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [commonConfirmState, setCommonConfirmState] = useState({
+    display: false,
+    title: 'CommonConfirmTitle',
+    message: 'CommonConfirmMessage',
+  });
+  const [alertState, setAlertState] = useState<{
+    display: boolean;
+    message: string;
+  }>({
+    display: true,
+    message: 'Alert Message',
+  });
   const [formState, setFormState] = useState<FormModel>(formInitial);
   useEffect(() => {
     console.log('mounted');
     console.log('location.state', location.state);
     switch (location.state as number) {
+      case EntryAction.Create: {
+        break;
+      }
       case EntryAction.Modify: {
-        console.log('EntryAction.Modify');
-        console.log(entryActionModifyState.get());
-        // if (entryActionModifyState.get()) {
-        //   setFormState((state) => ({ ...state, ...entryActionModifyState.get() }));
-        // } else {
-        //   navigate(ROUTE_APP01.P01);
-        // }
+        if (entryActionModifyState.get()) {
+          setFormState((state) => ({
+            ...state,
+            ...entryActionModifyState.get(),
+          }));
+        } else {
+          navigate(RouteApp01.P01);
+        }
         break;
       }
       default: {
-        navigate(ROUTE_APP01.P01);
+        navigate(RouteApp01.P01);
         break;
       }
     }
@@ -82,52 +104,68 @@ const Page = () => {
       console.log('unmounted');
     };
   }, [location.state, navigate]);
-  const onClickToPage = async () => {
-    navigate(ROUTE_APP01.P01, { state: App01P01EntryAction.Query });
+  const onClickToBack = async () => {
+    navigate(RouteApp01.P01, { state: App01P01EntryAction.Query });
   };
   const onClickShowForm = async () => {
     console.log(formState);
+    dispatch(commonMessageOpen('ShowForm'));
   };
   const onClickClearForm = async () => {
     setFormState({ ...formInitial });
+    setCommonConfirmState((state) => ({ ...state, display: true }));
+  };
+  const onCommonConfirmAgree = async () => {
+    setCommonConfirmState((state) => ({ ...state, display: false }));
+  };
+  const onCommonConfirmDisagree = async () => {
+    setCommonConfirmState((state) => ({ ...state, display: false }));
   };
   return (
     <>
-      <h3>App01P02Page.</h3>
+      <h2>App01P02Page.</h2>
+      <CommonConfirmComponent
+        {...commonConfirmState}
+        onAgree={onCommonConfirmAgree}
+        onDisagree={onCommonConfirmDisagree}
+      ></CommonConfirmComponent>
+      <Grid
+        container
+        direction="row"
+        justifyContent="right"
+        alignItems="center"
+      >
+        <Grid item>
+          <Button variant="contained" onClick={onClickToBack}>
+            Back
+          </Button>
+          <Button variant="contained" onClick={onClickShowForm}>
+            Show Form
+          </Button>
+          <Button variant="contained" onClick={onClickClearForm}>
+            Clear Form
+          </Button>
+        </Grid>
+      </Grid>
       <TableContainer>
         <Table>
           <TableBody>
             <TableRow>
-              <TableCell align="center">
-                <Button variant="contained" onClick={onClickToPage}>
-                  Page
-                </Button>
-              </TableCell>
-              <TableCell align="center">
-                <Button variant="contained" onClick={onClickShowForm}>
-                  Show Form
-                </Button>
-              </TableCell>
-              <TableCell align="center">
-                <Button variant="contained" onClick={onClickClearForm}>
-                  Clear Form
-                </Button>
+              <TableCell colSpan={2}>
+                {alertState.display && (
+                  <Alert
+                    severity="error"
+                    onClose={() => {
+                      setAlertState((state) => ({ ...state, display: false }));
+                    }}
+                  >
+                    {alertState.message}
+                  </Alert>
+                )}
               </TableCell>
             </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TableContainer>
-        <Table>
-          <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Component</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow>
-              <TableCell>TextFieldValue</TableCell>
+              <TableCell align="right">TextFieldValue</TableCell>
               <TableCell>
                 <TextField
                   value={formState.TextFieldValue}
@@ -141,7 +179,7 @@ const Page = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>SelectSingleValue</TableCell>
+              <TableCell align="right">SelectSingleValue</TableCell>
               <TableCell>
                 <Select
                   displayEmpty={true}
@@ -161,7 +199,7 @@ const Page = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>SelectMultipleValue</TableCell>
+              <TableCell align="right">SelectMultipleValue</TableCell>
               <TableCell>
                 <Select
                   multiple
@@ -180,7 +218,7 @@ const Page = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>RadioValue</TableCell>
+              <TableCell align="right">RadioValue</TableCell>
               <TableCell>
                 <Radio
                   value="A"
@@ -207,7 +245,7 @@ const Page = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>CheckboxValue</TableCell>
+              <TableCell align="right">CheckboxValue</TableCell>
               <TableCell>
                 <Checkbox
                   value="A"
@@ -238,7 +276,7 @@ const Page = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>SwitchValue</TableCell>
+              <TableCell align="right">SwitchValue</TableCell>
               <TableCell>
                 <Switch
                   checked={formState.SwitchValue}
@@ -252,7 +290,7 @@ const Page = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>TextareaValue</TableCell>
+              <TableCell align="right">TextareaValue</TableCell>
               <TableCell>
                 <TextField
                   multiline
@@ -269,7 +307,7 @@ const Page = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>FileValue</TableCell>
+              <TableCell align="right">FileValue</TableCell>
               <TableCell>
                 <label>
                   <input
@@ -300,6 +338,7 @@ const Page = () => {
   );
 };
 // export App01P02
+export type { EntryActionModifyModel as App01P02EntryActionModifyModel };
 export {
   EntryAction as App01P02EntryAction,
   entryActionModifyState as App01P02EntryActionModifyState,

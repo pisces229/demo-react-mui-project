@@ -9,7 +9,7 @@ export interface CommonModeModel {
 export interface CommonPageModel {
   PageNo: number;
   PageSize: number;
-  TotalCount?: number;
+  TotalCount: number;
 }
 export interface CommonAjaxOutputModel<T> {
   Success: boolean;

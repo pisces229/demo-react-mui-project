@@ -25,7 +25,8 @@ export function App02Route() {
   return <>{element}</>;
 }
 
-export const ROUTE_APP02 = {
+export const RouteApp02 = {
   P01: `/layout/app02/p01`,
   P02: `/layout/app02/p02`,
+  NoMatch: `/layout/app02/noMatch`,
 };

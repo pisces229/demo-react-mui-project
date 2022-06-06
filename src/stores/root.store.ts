@@ -1,4 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { commonProgressReducer } from './common-progress.store';
+import { commonMessageReducer } from './common-message.store';
+
 // rootReducer
 // const rootReducer = combineReducers({
 //   app01p: app01pReducer,
@@ -6,7 +9,8 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 // store
 export const store = configureStore({
   reducer: {
-    // rootReducer,
+    commonProgressReducer,
+    commonMessageReducer,
   },
 });
 export type StoreState = ReturnType<typeof store.getState>;

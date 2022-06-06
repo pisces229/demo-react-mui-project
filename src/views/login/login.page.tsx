@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import { useNavigate } from 'react-router';
 
 export function LoginPage() {
@@ -8,9 +9,9 @@ export function LoginPage() {
   return (
     <>
       <h2>Login Page</h2>
-      <button type="button" onClick={onClickEntry}>
+      <Button variant="contained" onClick={onClickEntry}>
         Entry
-      </button>
+      </Button>
     </>
   );
 }

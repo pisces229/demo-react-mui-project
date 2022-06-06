@@ -72,8 +72,8 @@ const doRefresh = () => {
     '/refresh',
     JSON.stringify(localStorage.getItem('token')!),
   )
-  .then((value) => localStorage.setItem('token', value.data))
-  .catch((error) => localStorage.removeItem('token'))
-  .finally(() => refresh.run());
+    .then((value) => localStorage.setItem('token', value.data))
+    .catch((error) => localStorage.removeItem('token'))
+    .finally(() => refresh.run());
 };
 export { CommonAuthAxios };

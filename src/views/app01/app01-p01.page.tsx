@@ -1,5 +1,8 @@
 import {
+  Alert,
   Button,
+  Grid,
+  Pagination,
   Switch,
   Table,
   TableBody,
@@ -10,14 +13,24 @@ import {
   TextField,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
+import { CommonPageModel } from '../../common/common-model';
 import { CommonState } from '../../common/common-state';
-import { ROUTE_APP01 } from '../../routes/app01.route';
-import { DefaultService } from '../../services/default.service';
+import {
+  commonProgressOpen,
+  commonProgressClose,
+} from '../../stores/common-progress.store';
+import { RouteApp01 } from '../../routes/app01.route';
 import {
   App01P02EntryAction,
   App01P02EntryActionModifyState,
 } from './app01-p02.page';
+import {
+  App03D01InputModel,
+  App03D01OutputModel,
+  App03D01Page,
+} from './../app03/app03-d01.page';
 
 // Action
 enum EntryAction {
@@ -38,11 +51,22 @@ const entryActionQueryState = new CommonState<FormModel>();
 const formInitial: FormModel = {
   TextFieldValue: '',
 };
+const pageInitial: CommonPageModel = {
+  PageNo: 3,
+  PageSize: 10,
+  TotalCount: 20,
+};
 // Page
 const Page = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [app03d01Input, setApp03d01Input] = useState<App03D01InputModel>({
+    display: false,
+    value: '',
+  });
   const [formState, setFormState] = useState<FormModel>(formInitial);
+  const [pageState, setPageState] = useState<CommonPageModel>(pageInitial);
   const [gridState, setGridState] = useState<GridModel[]>([]);
   useEffect(() => {
     console.log('mounted');
@@ -71,10 +95,14 @@ const Page = () => {
   const onClickToPage = async () => {
     entryActionQueryState.set({ ...formState });
     App01P02EntryActionModifyState.set({});
-    navigate(ROUTE_APP01.P02, { state: App01P02EntryAction.Modify });
+    navigate(RouteApp01.P02, { state: App01P02EntryAction.Create });
   };
   const onClickShowForm = async () => {
+    dispatch(commonProgressOpen());
     console.log(formState);
+    setTimeout(() => {
+      dispatch(commonProgressClose());
+    }, 3000);
   };
   const onClickClearForm = async () => {
     setFormState({ ...formInitial });
@@ -92,41 +120,60 @@ const Page = () => {
   const onClickRemoveGrid = async () => {
     setGridState([...gridState.filter((p) => !p.SwitchValue)]);
   };
+  const onClickDetail = (index: number) => async () => {
+    entryActionQueryState.set({ ...formState });
+    App01P02EntryActionModifyState.set({
+      TextFieldValue: gridState[index].TextFieldValue,
+    });
+    navigate(RouteApp01.P02, { state: App01P02EntryAction.Modify });
+  };
   const onClickModifyGrid = (index: number, item: {}) => {
     gridState[index] = { ...gridState[index], ...item };
     setGridState([...gridState]);
   };
+  const onChangePage = async (
+    event: React.ChangeEvent<unknown>,
+    page: number,
+  ) => {
+    setPageState((state) => ({ ...state, PageNo: page }));
+  };
+  const onInputApp03D01 = async () => {
+    setApp03d01Input((state) => ({ display: true, value: 'Input' }));
+  };
+  const onOutputApp03D01 = async (value: App03D01OutputModel) => {
+    console.log(value);
+    setApp03d01Input((state) => ({ display: false }));
+  };
   return (
     <>
-      <h3>App01P01Page.</h3>
+      <h2>App01P01Page.</h2>
+      <App03D01Page input={app03d01Input} output={onOutputApp03D01} />
+      <Grid
+        container
+        direction="row"
+        justifyContent="right"
+        alignItems="center"
+      >
+        <Grid item>
+          <Button variant="contained" onClick={onClickToPage}>
+            Page
+          </Button>
+          <Button variant="contained" onClick={onClickShowForm}>
+            Show Form
+          </Button>
+          <Button variant="contained" onClick={onClickClearForm}>
+            Clear Form
+          </Button>
+          <Button variant="contained" onClick={onInputApp03D01}>
+            Open
+          </Button>
+        </Grid>
+      </Grid>
       <TableContainer>
         <Table>
           <TableBody>
             <TableRow>
-              <TableCell align="center">
-                <Button variant="contained" onClick={onClickToPage}>
-                  Page
-                </Button>
-              </TableCell>
-              <TableCell align="center">
-                <Button variant="contained" onClick={onClickShowForm}>
-                  Show Form
-                </Button>
-              </TableCell>
-              <TableCell align="center">
-                <Button variant="contained" onClick={onClickClearForm}>
-                  Clear Form
-                </Button>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TableContainer>
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell>TextFieldValue</TableCell>
+              <TableCell align="right">TextFieldValue</TableCell>
               <TableCell>
                 <TextField
                   value={formState.TextFieldValue}
@@ -142,29 +189,19 @@ const Page = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <TableContainer>
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell align="center">
-                <Button variant="contained" onClick={onClickShowGrid}>
-                  Show Grid
-                </Button>
-              </TableCell>
-              <TableCell align="center">
-                <Button variant="contained" onClick={onClickCreateGrid}>
-                  Create Grid
-                </Button>
-              </TableCell>
-              <TableCell align="center">
-                <Button variant="contained" onClick={onClickRemoveGrid}>
-                  Remove Grid
-                </Button>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Grid container direction="row" justifyContent="left" alignItems="center">
+        <Grid item>
+          <Button variant="contained" onClick={onClickShowGrid}>
+            Show Grid
+          </Button>
+          <Button variant="contained" onClick={onClickCreateGrid}>
+            Create Grid
+          </Button>
+          <Button variant="contained" onClick={onClickRemoveGrid}>
+            Remove Grid
+          </Button>
+        </Grid>
+      </Grid>
       <TableContainer sx={{ maxHeight: 400 }}>
         <Table stickyHeader>
           <TableHead>
@@ -177,7 +214,14 @@ const Page = () => {
           <TableBody>
             {gridState.map((gridItem, gridIndex) => (
               <TableRow key={gridIndex}>
-                <TableCell>{gridIndex}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    onClick={onClickDetail(gridIndex)}
+                  >
+                    {gridIndex}
+                  </Button>
+                </TableCell>
                 <TableCell>
                   <Switch
                     checked={gridItem.SwitchValue}
@@ -203,6 +247,21 @@ const Page = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Grid item>
+          <Pagination
+            siblingCount={2}
+            count={pageState.TotalCount}
+            page={pageState.PageNo}
+            onChange={onChangePage}
+          />
+        </Grid>
+      </Grid>
     </>
   );
 };
