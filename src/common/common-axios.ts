@@ -1,7 +1,7 @@
 import axios from 'axios';
-const BASE_URL = 'https://localhost:9100';
+import CONFIG from '../config';
 const CommonAxios = axios.create({
-  baseURL: BASE_URL,
+  baseURL: CONFIG.ENDPOINT,
   headers: {
     'Cache-Control': 'no-cache',
     'Content-Type': 'application/json',

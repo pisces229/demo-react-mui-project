@@ -31,7 +31,7 @@
   },
   "scripts": {
     "format": "prettier --write \"src/**/*.tsx\" \"src/**/*.ts\" ",
-    "start": "react-scripts start",
+    "start": "set \"REACT_APP_ENV=development\" && react-scripts start",
     "start:test": "set \"REACT_APP_ENV=test\" && react-scripts start",
     "build": "react-scripts build",
     "build:test": "set \"REACT_APP_ENV=test\" && react-scripts build",

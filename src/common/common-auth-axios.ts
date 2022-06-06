@@ -1,4 +1,5 @@
 import axios from 'axios';
+import CONFIG from '../config';
 interface Refresh {
   do: boolean;
   queue: (() => void)[];
@@ -17,9 +18,8 @@ const refresh: Refresh = {
     refresh.queue.length = 0;
   },
 };
-const BASE_URL = 'https://localhost:9100';
 const CommonAuthAxios = axios.create({
-  baseURL: BASE_URL,
+  baseURL: CONFIG.ENDPOINT,
   headers: {
     'Cache-Control': 'no-cache',
     'Content-Type': 'application/json',
