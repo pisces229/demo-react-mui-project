@@ -16,7 +16,7 @@ const Component = (prop: {
 }) => {
   return (
     <>
-      <Dialog open={prop.display}>
+      <Dialog open={prop.display} disableEscapeKeyDown={false}>
         <DialogTitle>{prop.title}</DialogTitle>
         <DialogContent>
           <DialogContentText>{prop.message}</DialogContentText>

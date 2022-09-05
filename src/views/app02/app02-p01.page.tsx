@@ -30,6 +30,7 @@ import {
   App03D01OutputModel,
   App03D01Page,
 } from './../app03/app03-d01.page';
+import { CommonClickAwayComponent } from '../../components/common-click-away.component';
 
 // Action
 enum EntryAction {
@@ -202,7 +203,7 @@ const Page = () => {
           </Button>
         </Grid>
       </Grid>
-      <TableContainer>
+      {/* <TableContainer> */}
         <Table>
           <TableBody>
             <TableRow>
@@ -216,9 +217,15 @@ const Page = () => {
                 />
               </TableCell>
             </TableRow>
+            <TableRow>
+              <TableCell align="right">CommonClickAwayComponent</TableCell>
+              <TableCell>
+                <CommonClickAwayComponent></CommonClickAwayComponent>
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
-      </TableContainer>
+      {/* </TableContainer> */}
       <Grid container direction="row" justifyContent="left" alignItems="center">
         <Grid item>
           <Button variant="contained" onClick={onClickShowGrid}>
