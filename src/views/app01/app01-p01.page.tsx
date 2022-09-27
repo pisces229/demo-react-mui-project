@@ -33,6 +33,7 @@ import {
   App03D01Page,
 } from './../app03/app03-d01.page';
 import { CommonClickAwayComponent } from '../../components/common-click-away.component';
+import { CommonDatepickerComponent } from '../../components/common-datepicker.component';
 
 // Action
 enum EntryAction {
@@ -178,6 +179,7 @@ const Page = () => {
               <TableCell align="right">TextFieldValue</TableCell>
               <TableCell>
                 <TextField
+                  inputProps={{ maxLength: 10 }}
                   value={formState.TextFieldValue}
                   onChange={async (event) =>
                     setFormState((state) => ({
@@ -189,9 +191,19 @@ const Page = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell align="right">CommonClickAwayComponent</TableCell>
+              <TableCell align="right">CommonDatepickerComponent</TableCell>
               <TableCell>
-                <CommonClickAwayComponent></CommonClickAwayComponent>
+                <CommonDatepickerComponent
+                    value={formState.TextFieldValue}
+                    disabled={false}
+                    hidden={false}
+                    onChange={async (value: string) =>
+                      setFormState((state) => ({
+                        ...state,
+                        TextFieldValue: value,
+                      }))
+                    }
+                  ></CommonDatepickerComponent>
               </TableCell>
             </TableRow>
           </TableBody>
