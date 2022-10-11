@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { RouteObject, useRoutes } from 'react-router-dom';
+import { DefaultService } from '../services/default.service';
 import { App01P01Page } from '../views/app01/app01-p01.page';
 import { App01P02Page } from '../views/app01/app01-p02.page';
 
@@ -22,7 +24,20 @@ export function App01Route() {
     },
   ];
   const element = useRoutes(routeObject);
-  return <>{element}</>;
+
+  // Router Guard
+  const [allow, setAllow] = useState<boolean>(true);
+  DefaultService.router()
+    .then((response) => setAllow(response.data))
+    .catch((error) => setAllow(false))
+    .finally(() => console.log(`DefaultService.free.finally`));
+
+  return (
+    <>
+      {allow && element}
+      {!allow && <h3>Forbidden</h3>}
+    </>
+  );
 }
 
 export const RouteApp01 = {
@@ -30,3 +45,4 @@ export const RouteApp01 = {
   P02: `/layout/app01/p02`,
   NoMatch: `/layout/app01/noMatch`,
 };
+

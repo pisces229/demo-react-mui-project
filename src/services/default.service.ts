@@ -12,11 +12,12 @@ export const DefaultService = {
   // Test
   free: () => CommonAxios.get<string>(`/free`),
   auth: () => CommonAuthAxios.get<string>(`/auth`),
+  router: () => CommonAxios.get<boolean>(`/router`),
   // Auth
   signIn: (postData: { Account: string; Password: string }) =>
     CommonAxios.post<number>(`/signIn`, postData),
   validate: () => CommonAuthAxios.get(`/validate`),
-  refresh: (postData: number) => CommonAxios.post<number>(`/refresh`, postData),
+  refresh: (postData: string) => CommonAxios.post<number>(`/refresh`, JSON.stringify(postData)),
   signOut: () => CommonAxios.post(`/signOut`),
   // Value
   valueFromQuery: (value: string) =>

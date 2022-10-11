@@ -29,7 +29,7 @@ export function HomePage() {
   };
   const onClickRefresh = async () => {
     if (localStorage.getItem('token')) {
-      await DefaultService.refresh(parseInt(localStorage.getItem('token')!))
+      await DefaultService.refresh(localStorage.getItem('token')!)
         .then((response) => console.log(response))
         .catch((error) => console.log(error))
         .finally(() => console.log(`DefaultService.refresh.finally`));
