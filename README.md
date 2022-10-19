@@ -28,6 +28,10 @@ AXIOS
 
 `npm install --save axios`
 
+File Saver (ajax download)
+
+`npm install file-saver @types/file-saver --save`
+
 styled-components
 
 `npm install --save styled-components @types/styled-components`

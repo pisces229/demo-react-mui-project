@@ -10,7 +10,11 @@ export interface DefaultAjaxJsonFromModel {
 // Service
 export const DefaultService = {
   // Test
-  free: () => CommonAxios.get<string>(`/free`),
+  free: () => CommonAxios.get<string>(`/free`, {
+    headers: {
+      'Cache-Control': 'max-age=9999'
+    },
+  }),
   auth: () => CommonAuthAxios.get<string>(`/auth`),
   router: () => CommonAxios.get<boolean>(`/router`),
   // Auth
@@ -30,6 +34,6 @@ export const DefaultService = {
     }),
   jsonFromBody: (value: DefaultAjaxJsonFromModel) =>
     CommonAxios.post<DefaultAjaxJsonFromModel>(`/jsonFromBody`, value),
-  download: () => CommonAxios.get<Blob>(`/download`),
+  download: () => CommonAxios.get<Blob>(`/download`, { responseType: 'blob' }),
   upload: (value: FormData) => CommonAuthAxios.post<string>(`/upload`, value),
 };
