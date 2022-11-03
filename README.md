@@ -24,6 +24,10 @@ Redux
 
 `npm install --save redux react-redux @types/react-redux @reduxjs/toolkit`
 
+Zustand
+
+`npm install --save zustand`
+
 AXIOS
 
 `npm install --save axios`
