@@ -44,7 +44,7 @@ styled-components
 
 node-sass
 
-`npm install node-sass --save-dev`
+`npm install --save-dev node-sass`
 
 Eslint
 
@@ -62,6 +62,14 @@ Prettier
 
 [Customization](https://mui.com/zh/material-ui/customization/theming/)
 
+### Test
+
+[react-testing-library](https://github.com/testing-library/react-testing-library)
+
+[axios-mock-adapter](https://www.npmjs.com/package/axios-mock-adapter)
+
+`npm install --save-dev axios-mock-adapter`
+
 ### Self Certification
 
 [Install Chocolatey with PowerShell](https://docs.chocolatey.org/en-us/choco/setup)
@@ -78,4 +86,40 @@ Prettier
 
 ### Architecture
 
-### [React Testing Library](https://github.com/testing-library/react-testing-library)
+- asserts
+  - \[name\].\[png|svg|css\]
+- components
+  - \[name\]
+    - index.tsx
+    - style.ts 
+- hooks
+  - \[name\].ts
+- pages
+  - \[parent\]
+    - \[child\]
+	    - index.tsx
+	    - model.ts
+	    - context.ts 
+	    - \[name\]
+	      - index.tsx
+	      - style.ts
+- routes
+  - \[name\]
+    - index.tsx
+- services
+  - \[name\]
+    - index.ts
+    - dto.ts
+- stores
+  - \[name\]
+    - index.ts
+    - state.ts
+  - page
+    - \[parent\]
+      - \[child\]
+        - index.ts
+        - state.ts
+- styles
+  - \[name\].ts
+- utils
+  - \[name\].ts
