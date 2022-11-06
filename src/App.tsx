@@ -1,22 +1,18 @@
-import { Provider } from 'react-redux';
+import './App.scss';
 import { BrowserRouter } from 'react-router-dom';
-import './App.css';
-import { CommonMessageComponent } from './components/common-message.component';
-import { CommonProgressComponent } from './components/common-progress.component';
-import { RootRoute } from './routes/root.route';
-import { store } from './stores/root.store';
+import { MessageComponent } from './components/message';
+import { ProgressComponent } from './components/progress';
+import { RootRoute } from './routes';
 
 export function App() {
   return (
     <>
       {/* <h1>Demo React MUI Project App</h1> */}
-      <Provider store={store}>
-        <CommonMessageComponent></CommonMessageComponent>
-        <CommonProgressComponent></CommonProgressComponent>
-        <BrowserRouter>
-          <RootRoute />
-        </BrowserRouter>
-      </Provider>
+      <MessageComponent></MessageComponent>
+      <ProgressComponent></ProgressComponent>
+      <BrowserRouter>
+        <RootRoute />
+      </BrowserRouter>
     </>
   );
 }

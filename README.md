@@ -42,6 +42,10 @@ styled-components
 
 `npm install --save-dev jest-styled-components`
 
+node-sass
+
+`npm install node-sass --save-dev`
+
 Eslint
 
 `npm install --save-dev eslint eslint-config-prettier eslint-plugin-prettier`
