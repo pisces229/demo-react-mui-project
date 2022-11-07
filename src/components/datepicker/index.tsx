@@ -1,88 +1,18 @@
 import { Box, ClickAwayListener, Popper, TextField } from "@mui/material";
-import React, { Fragment, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-
-const YearMonthWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding-left: 0.2rem;
-  padding-right: 0.2rem;
-`;
-
-const YearMonthSelect = styled.select`
-  font-size: 1.125rem;
-  line-height: 1.5rem;
-  border-radius: 0.2rem;
-`;
-
-const YearMonthChange = styled.div`
-  font-size: 1.125rem;
-  line-height: 1.5rem;
-  width: 1.4rem;
-  text-align: center;
-  cursor: pointer;
-  opacity: 0.4;
-  outline: none;
-  &:hover, &:focus {
-    opacity: 1.0;
-  }
-`;
-
-const WeekWrapper = styled.div`
-  display: flex;
-`;
-
-const WeekItem = styled.div`
-  width: 1.4rem;
-  font-size: 1.125rem;
-  font-weight: bold;
-  text-align: center;
-  margin: 0.1rem;
-  padding-top: 0.2rem;
-  padding-bottom: 0.2rem;
-  padding-left: 0.2rem;
-  padding-right: 0.2rem;
-`;
-
-const DateWrapper = styled.div`
-  display: flex;
-`;
-
-const DateDefaultItem = styled.div`
-  width: 1.4rem;
-  font-size: 1.125rem;
-  text-align: center;
-  margin: 0.1rem;
-  padding-top: 0.2rem;
-  padding-bottom: 0.2rem;
-  padding-left: 0.2rem;
-  padding-right: 0.2rem;
-  cursor: pointer;
-  &:hover {
-    border-radius: 50%;
-    background-color: LightGray;
-  }
-`;
-
-const DateCurrentItem = styled(DateDefaultItem)`
-  border-radius: 50%;
-  background-color: LightGray;
-`;
-
-const DateOtherItem = styled(DateDefaultItem)`
-  opacity: 0.4;
-`;
-
-const DateSpaceItem = styled.div`
-  width: 1.4rem;
-  font-size: 1.125rem;
-  text-align: center;
-  margin: 0.1rem;
-  padding-top: 0.2rem;
-  padding-bottom: 0.2rem;
-  padding-left: 0.2rem;
-  padding-right: 0.2rem;
-`;
+import React, { Fragment, useEffect, useState } from "react";
+import {
+  DateDefaultItem,
+  DateCurrentItem,
+  DateOtherItem,
+  YearMonthWrapper,
+  YearMonthChange,
+  YearMonthSelect,
+  WeekWrapper,
+  WeekItem,
+  DateWrapper,
+  DateSpaceItem,
+} from "./style";
+import { TabLoopComponent } from "./tab-loop";
 
 const WeekTitleItems: string[] = ['日','一','二','三','四','五','六'];
 
@@ -372,39 +302,5 @@ const Component = (props: {
     </>
   );
 };
-
-const TabLoopWrapper = styled.div`
-  display: block;
-`;
-const TabLoopStart = styled.div`
-  display: block;
-`;
-const TabLoopEnd = styled.div`
-  display: block;
-`;
-
-const TabLoopComponent = (props: { children: JSX.Element }) => {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const getChildren = () => Array.prototype.slice
-    .call(wrapperRef!.current!.querySelectorAll("[tabindex]"),1,-1)
-    .filter((node: { disabled: boolean, tabIndex: number }) => !node.disabled && node.tabIndex !== -1);
-  const onFocusStart = (event: React.FocusEvent<HTMLDivElement>) => {
-    const tabChildren = getChildren();
-    tabChildren && tabChildren.length > 1 && tabChildren[tabChildren.length - 1].focus();
-  };
-  const onFocusEnd = (event: React.FocusEvent<HTMLDivElement>) => {
-    const tabChildren = getChildren();
-    tabChildren && tabChildren.length > 1 && tabChildren[0].focus();
-  };
-  return (
-    <>
-      <TabLoopWrapper ref={wrapperRef}>
-        <TabLoopStart tabIndex={0} onFocus={onFocusStart} />
-          {props.children}
-        <TabLoopEnd tabIndex={0} onFocus={onFocusEnd} />
-      </TabLoopWrapper>
-    </>
-  );
-}
 
 export { Component as DatepickerComponent };

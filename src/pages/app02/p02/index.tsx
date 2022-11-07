@@ -8,6 +8,9 @@ import { useNavigate } from 'react-router';
 import { useApp02P04ActionStore } from '../../../stores/page/app02/p04';
 import { ROUTE_APP02 } from '../../../routes/app02/path';
 import { App02P04Action } from '../../../stores/page/app02/p04/state';
+import { DatepickerComponent } from '../../../components/datepicker';
+import { CheckboxUtilAllChange, CheckboxUtilAllChecked, CheckboxUtilChange, CheckboxUtilChecked } from '../../../utils/checkbox';
+import { UploadPreviewComponent } from '../../../components/upload-preview';
 
 const options: CommonOptionModel[] = [
   { Value: '1', Text: 'A', Disable: false },
@@ -59,6 +62,18 @@ export function App02P02Page() {
             </TableCell>
           </TableRow>
           <TableRow>
+            <TableCell align="right">RocDate</TableCell>
+            <TableCell>
+              <DatepickerComponent
+                value={form.rocDateValue!}
+                disabled={false}
+                hidden={false}
+                onChange={async (value: string) =>
+                  setForm((state) => ({ ...state, rocDateValue: value }))
+                }></DatepickerComponent>
+            </TableCell>
+          </TableRow>
+          <TableRow>
             <TableCell align="right">SelectSingle</TableCell>
             <TableCell>
               <Select
@@ -98,15 +113,11 @@ export function App02P02Page() {
                 value={form.autocompleteValue}
                 renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => <TextField {...params} />}
                 onChange={async (
-                  event: React.SyntheticEvent,
+                  event: React.SyntheticEvent<Element, Event>,
                   value: CommonOptionModel | null,
                   reason: AutocompleteChangeReason,
                   details?: AutocompleteChangeDetails<CommonOptionModel> | undefined
                 ) => {
-                  // console.log(event);
-                  // console.log(value);
-                  // console.log(reason);
-                  // console.log(details);
                   setForm((state) => ({ ...state, autocompleteValue: value }))
                 }}
               />
@@ -130,13 +141,24 @@ export function App02P02Page() {
           <TableRow>
             <TableCell align="right">Checkbox</TableCell>
             <TableCell>
+              <Checkbox
+                checked={CheckboxUtilAllChecked(options.map(item => item.Value), form.checkboxValue)}
+                onChange={async (event) =>
+                  setForm((state) => ({
+                    ...state,
+                    checkboxValue: CheckboxUtilAllChange(options.map(item => item.Value), event.target.checked)
+                  }))
+                }/>ALL
               {options.map((item, index) => (
                 <Fragment key={index}>
                   <Checkbox
                     value={item.Value}
-                    checked={item.Value === form.checkboxValue}
+                    checked={CheckboxUtilChecked(form.checkboxValue, item.Value)}
                     onChange={async (event) =>
-                      setForm((state) => ({ ...state, checkboxValue: event.target.checked ? event.target.value : '' }))
+                      setForm((state) => ({
+                        ...state,
+                        checkboxValue: CheckboxUtilChange(form.checkboxValue, event.target.checked, event.target.value)
+                      }))
                     }/>{item.Text}
                 </Fragment>))
               }
@@ -174,9 +196,9 @@ export function App02P02Page() {
                   onChange={async (event) =>
                     setForm((state) => ({ ...state, fileValue: FileUtilListToArray(event.target.files) }))
                   }/>
-                <Button variant="contained" component="span" endIcon={<UploadIcon />}>Upload</Button>
+                <Button fullWidth={true} variant="contained" component="span" endIcon={<UploadIcon />}>Upload</Button>
               </label>
-              {form.fileValue.map((item, index) => (<div key={index}>[{item.name}][{item.size}]</div>))}
+              <UploadPreviewComponent files={form.fileValue}></UploadPreviewComponent>
             </TableCell>
           </TableRow>
         </TableBody>
