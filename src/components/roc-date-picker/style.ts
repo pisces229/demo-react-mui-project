@@ -18,7 +18,6 @@ export const YearMonthSelect = styled('select')({
 });
 export const YearMonthChange = styled('div')({
   fontSize: '0.875rem',
-  width: '1.4rem',
   textAlign: 'center',
   cursor: 'pointer',
   opacity: '0.4',
@@ -32,15 +31,16 @@ export const WeekWrapper = styled('div')({
   display: 'flex',
 });
 export const WeekItem = styled('div')({
-  width: '1.4rem',
+  width: '1rem',
+  height: '1.125rem',
   fontSize: '0.875rem',
   fontWeight: 'bold',
   textAlign: 'center',
   margin: '0.1rem',
   paddingTop: '0.2rem',
   paddingBottom: '0.2rem',
-  paddingLeft: '0.2rem',
-  paddingRight: '0.2rem',
+  paddingLeft: '0.3rem',
+  paddingRight: '0.3rem',
 });
 
 export const DateWrapper = styled('div')({
@@ -48,14 +48,15 @@ export const DateWrapper = styled('div')({
 });
 
 export const DateDefaultItem = styled('div')({
-  width: '1.4rem',
+  width: '1rem',
+  height: '1.125rem',
   fontSize: '0.875rem',
   textAlign: 'center',
   margin: '0.1rem',
   paddingTop: '0.2rem',
   paddingBottom: '0.2rem',
-  paddingLeft: '0.2rem',
-  paddingRight: '0.2rem',
+  paddingLeft: '0.3rem',
+  paddingRight: '0.3rem',
   cursor: 'pointer',
   '&:hover': {
     borderRadius: '50%',
@@ -70,13 +71,14 @@ export const DateOtherItem = styled(DateDefaultItem)(({ theme }) => ({
   opacity: '0.4',
 }));
 export const DateSpaceItem = styled('div')({
-  width: '1.4rem',
+  width: '1rem',
+  height: '1.125rem',
   fontSize: '0.875rem',
   textAlign: 'center',
   margin: '0.1rem',
   paddingTop: '0.2rem',
   paddingBottom: '0.2rem',
-  paddingLeft: '0.2rem',
-  paddingRight: '0.2rem',
+  paddingLeft: '0.3rem',
+  paddingRight: '0.3rem',
 });
 
