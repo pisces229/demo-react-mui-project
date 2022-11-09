@@ -1,7 +1,6 @@
 import { Button, Grid, Table, TableBody, TableCell, TableRow, TextField } from "@mui/material";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { DatepickerComponent } from "../../../components/datepicker";
 import { ROUTE_APP01 } from "../../../routes/app01/path";
 import { useProgressComponentStore } from "../../../stores/component/progress";
 import { useApp01P01ActionStore } from "../../../stores/page/app01/p01";
@@ -88,13 +87,12 @@ export function PageForm() {
           <TableRow>
             <TableCell align="right">Second</TableCell>
             <TableCell>
-              <DatepickerComponent
+              <TextField
+                inputProps={{ maxLength: 10 }}
                 value={pageContext.form.second!}
-                disabled={false}
-                hidden={false}
-                onChange={async (value: string) =>
-                  pageContext.setForm((state) => ({ ...state, second: value }))
-                }></DatepickerComponent>
+                onChange={async (event) =>
+                  pageContext.setForm((state) => ({ ...state, second: event.target.value }))
+                }/>
             </TableCell>
           </TableRow>
         </TableBody>

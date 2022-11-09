@@ -1,5 +1,5 @@
-import styled from "styled-components";
+import { styled } from '@mui/material';
 
-export const MeH2 = styled.h2`
-  color: green;
-`;
+export const MeH2 = styled('h2')({
+  color: 'Green',
+});

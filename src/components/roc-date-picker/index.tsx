@@ -1,6 +1,5 @@
-import { Box, ClickAwayListener, Popper, TextField } from "@mui/material";
-import React, { Fragment, useEffect, useState } from "react";
 import {
+  MeIcon,
   DateDefaultItem,
   DateCurrentItem,
   DateOtherItem,
@@ -11,8 +10,13 @@ import {
   WeekItem,
   DateWrapper,
   DateSpaceItem,
-} from "./style";
+ } from "./style";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { Box, ClickAwayListener, Popper, TextField } from "@mui/material";
 import { TabLoopComponent } from "./tab-loop";
+import { useState, useRef, useEffect, Fragment } from "react";
 
 const WeekTitleItems: string[] = ['日','一','二','三','四','五','六'];
 
@@ -34,8 +38,13 @@ const Component = (props: {
   hidden?: boolean,
   onChange: Function,
 }) => {
+  const textFieldRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [open, setOpen] = useState<boolean>(false);
+  const [yearValue, setYearValue] = useState(1911);
+  const [monthValue, setMonthValue] = useState(0);
+  const [dateValue, setDateValue] = useState(0);
   useEffect(() => {
     if (open) {
       let defaultDate = new Date();
@@ -64,49 +73,40 @@ const Component = (props: {
         setMonthValue(defaultDate.getMonth());
         setDateValue(defaultDate.getDate());
       }
+      inputRef.current?.focus();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
-  const onFocusInput = (event: React.FocusEvent<HTMLElement>) => {
-    setAnchorEl(anchorEl ? null : event.currentTarget);
-    setOpen(true);
-  };
+  }, [open]);
   const onClickAway = () => {
     setAnchorEl(null);
     setOpen(false);
   };
-  const [yearValue, setYearValue] = useState(1911);
-  const [monthValue, setMonthValue] = useState(0);
-  const [dateValue, setDateValue] = useState(0);
-  const renderInput = () => {
-    const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onClickIcon = () => {
+    if (!open) {
+      if (!anchorEl) {
+        setAnchorEl(anchorEl ? null : textFieldRef.current);
+        setOpen(true);
+      }
+    } else {
+      setAnchorEl(null);
+      setOpen(false);
+    }
+  };
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    props.onChange(event.target.value);
+  };
+  const onBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    if (validateValue(event.target.value)) {
       props.onChange(event.target.value);
-    };
-    const onBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-      if (validateValue(event.target.value)) {
-        props.onChange(event.target.value);
-      } else {
-        props.onChange('');
-      }
-    };
-    const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      const eventKey = event.key;
-      if (eventKey === 'Tab') {
-        onClickAway();
-      }
-    };
-    return (
-      <TextField
-        inputProps={{ maxLength: 7 }}
-        value={props.value}
-        disabled={props.disabled}
-        hidden={props.hidden}
-        onChange={onChange}
-        onFocus={onFocusInput}
-        onBlur={onBlur}
-        onKeyDown={onKeyDown}
-      />
-    );
+    } else {
+      props.onChange('');
+    }
+  };
+  const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const eventKey = event.key;
+    if (eventKey === 'Tab') {
+      onClickAway();
+    }
   };
   const renderCalendar = () => {
     let yearsVelue = yearValue - 20;
@@ -217,7 +217,9 @@ const Component = (props: {
           <YearMonthChange tabIndex={0}
             onClick={onClickYearMonthChange(-1)}
             onKeyDown={onKeyboardYearMonthChange(-1)}
-          >◀</YearMonthChange>
+          >
+            <NavigateBeforeIcon />
+          </YearMonthChange>
           <YearMonthSelect tabIndex={0} value={yearValue}
             onChange={(e) => setYearValue(Number(e.target.value))}
             onKeyDown={onKeyboardYearMonthSelect}
@@ -241,7 +243,9 @@ const Component = (props: {
           <YearMonthChange tabIndex={0}
             onClick={onClickYearMonthChange(1)}
             onKeyDown={onKeyboardYearMonthChange(1)}
-          >▶</YearMonthChange>
+          >
+            <NavigateNextIcon />
+          </YearMonthChange>
         </YearMonthWrapper>
         <WeekWrapper>
           {WeekTitleItems.map((item, index) => (
@@ -280,17 +284,35 @@ const Component = (props: {
     <>
       <ClickAwayListener onClickAway={onClickAway}>
         <Box sx={{
-            position: 'relative',
-            display: 'inline-block',
-            width: 'auto',
-          }}>
-          {renderInput()}
+          position: 'relative',
+          display: 'inline-block',
+          width: 'auto',
+        }}>
+          <TextField
+            ref={textFieldRef}
+            inputRef={inputRef}
+            inputProps={{ maxLength: 7, size: 17, }}
+            value={props.value}
+            disabled={props.disabled}
+            hidden={props.hidden}
+            onChange={onChange}
+            onBlur={onBlur}
+            onKeyDown={onKeyDown}
+            InputProps={{
+              endAdornment: (
+                <MeIcon onClick={onClickIcon}>
+                  <CalendarMonthIcon sx={{ opacity: 0.6 }} />
+                </MeIcon>
+              ),
+            }}
+            />
           <Popper open={open} anchorEl={anchorEl} sx={{ zIndex: 999 }}>
             <Box sx={{
-              border: 1,
+              border: 1.5,
               borderRadius: 1,
               p: 1,
-              bgcolor: 'background.paper'
+              borderColor: 'LightGray',
+              bgcolor: 'background.paper',
             }}>
               <TabLoopComponent>
                 {renderCalendar()}
@@ -301,6 +323,6 @@ const Component = (props: {
       </ClickAwayListener>
     </>
   );
-};
+}
 
-export { Component as DatepickerComponent };
+export { Component as RocDatePickerComponent };

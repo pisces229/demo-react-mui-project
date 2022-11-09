@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router';
 import { useApp02P04ActionStore } from '../../../stores/page/app02/p04';
 import { ROUTE_APP02 } from '../../../routes/app02/path';
 import { App02P04Action } from '../../../stores/page/app02/p04/state';
-import { DatepickerComponent } from '../../../components/datepicker';
+import { RocDatePickerComponent } from '../../../components/roc-date-picker';
 import { CheckboxUtilAllChange, CheckboxUtilAllChecked, CheckboxUtilChange, CheckboxUtilChecked } from '../../../utils/checkbox';
 import { UploadPreviewComponent } from '../../../components/upload-preview';
 
@@ -59,18 +59,23 @@ export function App02P02Page() {
                 onChange={async (event) =>
                   setForm((state) => ({ ...state, textFieldValue: event.target.value }))
                 }/>
+                             <TextField
+                value={form.textFieldValue}
+                onChange={async (event) =>
+                  setForm((state) => ({ ...state, textFieldValue: event.target.value }))
+                }/>
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell align="right">RocDate</TableCell>
             <TableCell>
-              <DatepickerComponent
+              <RocDatePickerComponent
                 value={form.rocDateValue!}
                 disabled={false}
                 hidden={false}
                 onChange={async (value: string) =>
                   setForm((state) => ({ ...state, rocDateValue: value }))
-                }></DatepickerComponent>
+                }/>
             </TableCell>
           </TableRow>
           <TableRow>
