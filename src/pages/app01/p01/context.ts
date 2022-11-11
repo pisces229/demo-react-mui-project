@@ -3,7 +3,7 @@ import { App01P01Action } from "../../../stores/page/app01/p01/state";
 import { CommonPageModel, initialCommonPageModel } from "../../model";
 import { FormModel, GridModel, initialFormModel } from "./model";
 
-interface PageContextModel {
+interface ContextModel {
   action?: App01P01Action;
   setAction: Dispatch<SetStateAction<App01P01Action>>;
   form: FormModel;
@@ -13,7 +13,7 @@ interface PageContextModel {
   grid: GridModel[];
   setGrid: Dispatch<SetStateAction<GridModel[]>>;
 }
-export const PageContext = createContext<PageContextModel>({
+export const PageContext = createContext<ContextModel>({
   setAction: () => {},
   form: initialFormModel,
   setForm: () => {},
