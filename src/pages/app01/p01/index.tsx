@@ -13,29 +13,31 @@ export function App01P01Page() {
   const [form, setForm] = useState<FormModel>(initialFormModel);
   const [gridPage, setGridPage] = useState<CommonPageModel>(initialCommonPageModel);
   const [grid, setGrid] = useState<GridModel[]>([]);
-  const actionState = useApp01P01ActionStore();
+  const actionStore = useApp01P01ActionStore();
   useEffect(() => {
-    switch (actionState.action) {
+    console.log('App01P01Page.init.MOUNTED');
+    switch (actionStore.action) {
       case App01P01Action.Query: {
         setAction(App01P01Action.Query);
-        setForm({ ...actionState.queryState! });
-        // do something
+        setForm({ ...actionStore.queryState! });
+        setDisplay(true);
         break;
       }
       default: {
         setAction(App01P01Action.Empty);
-        // do something
+        setDisplay(true);
         break;
       }
     }
-    actionState.setAction();
-    setDisplay(true);
+    return () => {
+      console.log('App01P01Page.init.UNMOUNTED');
+      actionStore.setAction();
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   return (
     <>
-      <h2>APP01 Page</h2>
+      <h2>App01P01Page</h2>
       {display &&
       <PageContext.Provider value={{
         action, setAction,

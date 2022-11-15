@@ -36,15 +36,13 @@ File Saver (ajax download)
 
 `npm install file-saver @types/file-saver --save`
 
-styled-components
-
-`npm install --save styled-components @types/styled-components`
-
-`npm install --save-dev jest-styled-components`
-
 node-sass
 
 `npm install --save-dev node-sass`
+
+[immer](https://immerjs.github.io/immer/)
+
+`npm install --save immer`
 
 Eslint
 

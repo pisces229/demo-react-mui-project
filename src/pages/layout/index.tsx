@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { ROUTE_HOME, ROUTE_LOGIN } from '../../routes/path';
 import { ROUTE_APP01 } from '../../routes/app01/path';
 import { ROUTE_APP02 } from '../../routes/app02/path';
+import { ErrorBoundaryComponent } from '../../components/error-boundary';
 
 const items = [
   { text: 'APP01', path: ROUTE_APP01.P01 },
@@ -86,7 +87,9 @@ export function LayoutPage() {
           </List>
         </Box>
       </Drawer>
-      <Outlet/>
+      <ErrorBoundaryComponent>
+        <Outlet/>
+      </ErrorBoundaryComponent>
     </>
   );
 }

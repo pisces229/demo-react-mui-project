@@ -12,19 +12,20 @@ export function App01P02Page() {
   const [display, setDisplay] = useState<boolean>(false);
   const [action, setAction] = useState<App01P02Action>(App01P02Action.Empty);
   const [form, setForm] = useState<FormModel>(initialFormModel);
-  const actionState = useApp01P02ActionStore();
+  const actionStore = useApp01P02ActionStore();
   useEffect(() => {
-    switch (actionState.action) {
+    console.log('App01P02Page.init.MOUNTED');
+    switch (actionStore.action) {
       case App01P02Action.Create: {
         setAction(App01P02Action.Create);
-        setForm({ ...actionState.editState! });
-        // do something
+        setForm({ ...actionStore.editState! });
+        setDisplay(true);
         break;
       }
       case App01P02Action.Modify: {
         setAction(App01P02Action.Modify);
-        setForm({ ...actionState.editState! });
-        // do something
+        setForm({ ...actionStore.editState! });
+        setDisplay(true);
         break;
       }
       default: {
@@ -32,14 +33,15 @@ export function App01P02Page() {
         break;
       }
     }
-    actionState.setAction();
-    setDisplay(true);
+    return () => {
+      console.log('App01P02Page.init.UNMOUNTED');
+      actionStore.setAction();
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   return (
     <>
-      <h2>APP01 Page</h2>
+      <h2>App01P02Page</h2>
       {display &&
       <PageContext.Provider value={{
         action, setAction,
