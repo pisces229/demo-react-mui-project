@@ -19,16 +19,19 @@ export function App01P01Page() {
       case App01P01Action.Query: {
         setAction(App01P01Action.Query);
         setForm({ ...actionState.queryState! });
+        // do something
         break;
       }
       default: {
         setAction(App01P01Action.Empty);
+        // do something
+        break;
       }
     }
     actionState.setAction();
     setDisplay(true);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   return (
     <>

@@ -18,21 +18,24 @@ export function App01P02Page() {
       case App01P02Action.Create: {
         setAction(App01P02Action.Create);
         setForm({ ...actionState.editState! });
+        // do something
         break;
       }
       case App01P02Action.Modify: {
         setAction(App01P02Action.Modify);
         setForm({ ...actionState.editState! });
+        // do something
         break;
       }
       default: {
         navigate(ROUTE_APP01.P01);
+        break;
       }
     }
     actionState.setAction();
     setDisplay(true);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   return (
     <>
