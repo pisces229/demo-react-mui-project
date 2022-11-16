@@ -35,10 +35,11 @@ export function App01P02Page() {
   const callbackQuery = useCallback(() => {
     useProgressComponentStore.getState().open();
     console.log(form);
-    DefaultService.run().then(() => {
+    DefaultService.run().then((response) => {
       setForm(produce((draft) => {
-        draft.first = `first[${draft.row}]`;
-        draft.second = `second[${draft.row}]`;
+        draft.row = form.row;
+        draft.first = `first[${form.row}]`;
+        draft.second = response.data.Data;
       }));
       useProgressComponentStore.getState().close();
     });
@@ -90,12 +91,16 @@ export function App01P02Page() {
       </Grid>
       <Table>
         <TableBody>
-        <TableRow>
+          <TableRow>
+            <TableCell align="right">Row</TableCell>
+            <TableCell>{form.row}</TableCell>
+          </TableRow>
+          <TableRow>
             <TableCell align="right">First</TableCell>
             <TableCell>
               <TextField
                 inputProps={{ maxLength: 10 }}
-                value={form.first!}
+                value={form.first}
                 onChange={async (event) =>
                   setForm(produce((draft) => { draft.first = event.target.value; }))
                 }/>
@@ -106,7 +111,7 @@ export function App01P02Page() {
             <TableCell>
               <TextField
                 inputProps={{ maxLength: 10 }}
-                value={form.second!}
+                value={form.second}
                 onChange={async (event) =>
                   setForm(produce((draft) => { draft.second = event.target.value; }))
                 }/>

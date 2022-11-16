@@ -44,6 +44,10 @@ node-sass
 
 `npm install --save immer`
 
+[React Transition Group](https://reactcommunity.org/react-transition-group/)
+
+`npm install --save react-transition-group`
+
 Eslint
 
 `npm install --save-dev eslint eslint-config-prettier eslint-plugin-prettier`

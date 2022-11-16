@@ -4,7 +4,9 @@ import { DefaultDto } from "./dto";
 
 export const DefaultService = {
   // Test
-  run: () => axios.get<string>(`https://localhost:9012/`),
+  run: () => axios.get<{ Success: boolean, Message: string, Data: string }>(`https://localhost:9012/`)
+    .then(() => ({ data: { Success: true, Message: '', Data: '@@@@@' } })),
+  // run: () => axios.get<{ Success: boolean, Message: string, Data: string }>(`https://localhost:9100/run`),
   free: () => DefaultAxios.get<string>(`/free`, {
     headers: {
       'Cache-Control': 'max-age=9999'

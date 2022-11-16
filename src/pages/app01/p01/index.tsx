@@ -35,7 +35,7 @@ export function App01P01Page() {
   const callbackQuery = useCallback(() => {
     useProgressComponentStore.getState().open();
     console.log(form);
-    DefaultService.run().then(() => {
+    DefaultService.run().then((response) => {
       setGridPage(produce((draft) => {
         draft.PageNo = 1;
         draft.PageSize = 10;
@@ -46,7 +46,7 @@ export function App01P01Page() {
           check: false,
           row: (grid.length + 1).toString(),
           first: (grid.length + 1).toString(),
-          second: (grid.length + 1).toString(),
+          second: response.data.Data,
         });
       }));
       useProgressComponentStore.getState().close();
@@ -85,13 +85,13 @@ export function App01P01Page() {
   const onClickClear = async () => setForm(initialFormModel);
   const onClickGridCreate = async () => {
     useProgressComponentStore.getState().open();
-    await DefaultService.run();
+    let response = await DefaultService.run();
     setGrid(produce((draft) => {
       draft.push({
         check: false,
         row: (grid.length + 1).toString(),
         first: (grid.length + 1).toString(),
-        second: (grid.length + 1).toString(),
+        second: response.data.Data,
       });
     }));
     useProgressComponentStore.getState().close();
@@ -139,7 +139,7 @@ export function App01P01Page() {
             <TableCell>
               <TextField
                 inputProps={{ maxLength: 10 }}
-                value={form.first!}
+                value={form.first}
                 onChange={async (event) =>
                   setForm(produce((draft) => { draft.first = event.target.value; }))
                 }/>
@@ -150,7 +150,7 @@ export function App01P01Page() {
             <TableCell>
               <TextField
                 inputProps={{ maxLength: 10 }}
-                value={form.second!}
+                value={form.second}
                 onChange={async (event) =>
                   setForm(produce((draft) => { draft.second = event.target.value; }))
                 }/>
