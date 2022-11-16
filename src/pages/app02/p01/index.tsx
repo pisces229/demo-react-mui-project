@@ -128,35 +128,17 @@ export function App02P01Page() {
         columns={1}
       >
         <Grid item xs={1}>
-          <Button variant="contained" onClick={onClickSignIn}>
-            SignIn
-          </Button>
-          <Button variant="contained" onClick={onClickValidate}>
-            Validate
-          </Button>
-          <Button variant="contained" onClick={onClickRefresh}>
-            Refresh
-          </Button>
-          <Button variant="contained" onClick={onClickSignOut}>
-            SignOut
-          </Button>
+          <Button variant="contained" onClick={onClickSignIn}>SignIn</Button>
+          <Button variant="contained" onClick={onClickValidate}>Validate</Button>
+          <Button variant="contained" onClick={onClickRefresh}>Refresh</Button>
+          <Button variant="contained" onClick={onClickSignOut}>SignOut</Button>
         </Grid>
         <Grid item xs={1}>
-          <Button variant="contained" onClick={onClickFree}>
-            Free
-          </Button>
-          <Button variant="contained" onClick={onClickAuth}>
-            Auth
-          </Button>
-          <Button variant="contained" onClick={onClickMultipleAuth}>
-            MultipleAuth
-          </Button>
-          <Button variant="contained" onClick={onClickDownload}>
-            Download
-          </Button>
-          <Button variant="contained" onClick={onClickUpload}>
-            Upload
-          </Button>
+          <Button variant="contained" onClick={onClickFree}>Free</Button>
+          <Button variant="contained" onClick={onClickAuth}>Auth</Button>
+          <Button variant="contained" onClick={onClickMultipleAuth}>MultipleAuth</Button>
+          <Button variant="contained" onClick={onClickDownload}>Download</Button>
+          <Button variant="contained" onClick={onClickUpload}>Upload</Button>
         </Grid>
       </Grid>
     </>

@@ -1,19 +1,20 @@
 import { Alert, Snackbar } from '@mui/material';
 import { useMessageComponentStore } from '../../stores/component/message';
 
+// severity : "success" | "error" | "info" | "warning"
+
 const Component = () => {
-  const messageState = useMessageComponentStore((state) => ({display: state.display, message: state.message}));
-  const messageClose = useMessageComponentStore((state) => (state.close));
+  const store = useMessageComponentStore();
   return (
     <>
       <Snackbar
-        open={messageState.display}
+        open={store.display}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         autoHideDuration={2000}
-        onClose={messageClose}
+        onClose={store.close}
       >
-        <Alert onClose={messageClose} severity="success">
-          {messageState.message}
+        <Alert onClose={store.close} severity={store.severity}>
+          {store.message}
         </Alert>
       </Snackbar>
     </>

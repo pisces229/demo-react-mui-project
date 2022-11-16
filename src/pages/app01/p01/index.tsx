@@ -35,7 +35,7 @@ export function App01P01Page() {
   const callbackQuery = useCallback(() => {
     useProgressComponentStore.getState().open();
     console.log(form);
-    DefaultService.run().then((response) => {
+    DefaultService.success().then((response) => {
       setGridPage(produce((draft) => {
         draft.PageNo = 1;
         draft.PageSize = 10;
@@ -51,16 +51,17 @@ export function App01P01Page() {
       }));
       useProgressComponentStore.getState().close();
     });
-  }, [form, grid.length]);
+  }, [form, grid]);
 
   useEffect(() => {
     console.log('App01P01Page.initial');
     if (!initialRef.current) {
+      initialRef.current = true;
       switch (action) {
         case App01P01Action.Empty: {
           console.log('App01P01Action.Empty');
           useProgressComponentStore.getState().open();
-          DefaultService.run().then(() => {
+          DefaultService.success().then(() => {
             useProgressComponentStore.getState().close();
           });
           break;
@@ -71,7 +72,6 @@ export function App01P01Page() {
           break;
         }
       }
-      initialRef.current = true;
       useApp01P01ActionStore.getState().setAction();
     }
   }, [action, callbackQuery, form, grid.length]);
@@ -85,7 +85,7 @@ export function App01P01Page() {
   const onClickClear = async () => setForm(initialFormModel);
   const onClickGridCreate = async () => {
     useProgressComponentStore.getState().open();
-    let response = await DefaultService.run();
+    let response = await DefaultService.success();
     setGrid(produce((draft) => {
       draft.push({
         check: false,
@@ -114,22 +114,11 @@ export function App01P01Page() {
   return (
     <>
       <h2>App01P01Page</h2>
-      <Grid
-        container
-        direction="row"
-        justifyContent="right"
-        alignItems="center"
-      >
+      <Grid container direction="row" justifyContent="right" alignItems="center">
         <Grid item>
-          <Button variant="contained" onClick={onClickCreate}>
-            Create
-          </Button>
-          <Button variant="contained" onClick={onClickQuery}>
-            Query
-          </Button>
-          <Button variant="contained" onClick={onClickClear}>
-            Clear Form
-          </Button>
+          <Button variant="contained" onClick={onClickCreate}>Create</Button>
+          <Button variant="contained" onClick={onClickQuery}>Query</Button>
+          <Button variant="contained" onClick={onClickClear}>Clear</Button>
         </Grid>
       </Grid>
       <Table>
@@ -178,10 +167,7 @@ export function App01P01Page() {
             {grid.map((gridItem, gridIndex) => (
               <TableRow key={gridIndex}>
                 <TableCell>
-                  <Button
-                    variant="contained"
-                    onClick={onClickGridEdit(gridIndex)}
-                  >{gridIndex}</Button>
+                  <Button variant="contained" onClick={onClickGridEdit(gridIndex)}>{gridIndex}</Button>
                 </TableCell>
                 <TableCell>
                   <Switch

@@ -1,12 +1,26 @@
-import axios from "axios";
 import { AuthenticateAxios, DefaultAxios } from "../axios";
 import { DefaultDto } from "./dto";
 
+const uuid = () =>
+  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
+    (c) => {
+      let r = Math.random() * 16 | 0;
+      let v = (c === 'x' ? r : ((r & 0x3) | 0x8));
+      return v.toString(16);
+    });
+
 export const DefaultService = {
   // Test
-  run: () => axios.get<{ Success: boolean, Message: string, Data: string }>(`https://localhost:9012/`)
-    .then(() => ({ data: { Success: true, Message: '', Data: '@@@@@' } })),
-  // run: () => axios.get<{ Success: boolean, Message: string, Data: string }>(`https://localhost:9100/run`),
+  success: () => new Promise<{ data: { Success: boolean, Message: string, Data: string } }>((resolve, reject) => {
+    setTimeout(resolve, 1000, ({ data: { Success: true, Message: '', Data: uuid() } }));
+    // setTimeout(reject, 1000, 'Promise');
+  }),
+  fail: () => new Promise<{ data: { Success: boolean, Message: string, Data: string } }>((resolve, reject) => {
+    // setTimeout(resolve, 1000, { data: { Success: true, Message: '', Data: uuid() } });
+    setTimeout(reject, 1000, 'Promise Fail');
+  }),
+  // success: () => DefaultAxios.get<{ Success: boolean, Message: string, Data: string }>(`https://localhost:9100/success`),
+  // fail: () => DefaultAxios.get<{ Success: boolean, Message: string, Data: string }>(`https://localhost:9100/fail`),
   free: () => DefaultAxios.get<string>(`/free`, {
     headers: {
       'Cache-Control': 'max-age=9999'
