@@ -4,7 +4,8 @@ export enum App01P02Action {
   Modify,
 }
 export interface App01P02ActionEditState {
-  row?: string;
-  first: string;
-  second: string;
+  row: string;
 }
+export const initApp01P02ActionEditState: App01P02ActionEditState = {
+  row: '',
+};

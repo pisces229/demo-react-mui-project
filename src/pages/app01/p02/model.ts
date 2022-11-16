@@ -1,9 +1,10 @@
 export interface FormModel {
-  row?: string;
+  row: string;
   first: string;
   second: string;
 }
 export const initialFormModel: FormModel = {
+  row: '',
   first: '',
   second: '',
 }

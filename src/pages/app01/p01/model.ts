@@ -8,6 +8,7 @@ export const initialFormModel: FormModel = {
 }
 export interface GridModel {
   check: boolean;
+  row: string;
   first: string;
   second: string;
 }

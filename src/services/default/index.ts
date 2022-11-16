@@ -1,8 +1,10 @@
+import axios from "axios";
 import { AuthenticateAxios, DefaultAxios } from "../axios";
 import { DefaultDto } from "./dto";
 
 export const DefaultService = {
   // Test
+  run: () => axios.get<string>(`https://localhost:9012/`),
   free: () => DefaultAxios.get<string>(`/free`, {
     headers: {
       'Cache-Control': 'max-age=9999'

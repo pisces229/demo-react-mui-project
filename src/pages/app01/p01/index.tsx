@@ -1,53 +1,230 @@
-import { useEffect, useState } from "react";
+import { Button, Grid, Pagination, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router";
+import produce from "immer";
+import { CommonPageModel, initialCommonPageModel } from "../../model";
+import { useProgressComponentStore } from "../../../stores/component/progress";
+import { DefaultService } from "../../../services/default";
+import { FormModel, initialFormModel, GridModel } from "./model";
 import { useApp01P01ActionStore } from "../../../stores/page/app01/p01";
 import { App01P01Action } from "../../../stores/page/app01/p01/state";
-import { PageContext } from "./context";
-import { FormModel, initialFormModel, GridModel } from "./model";
-import { PageForm } from "./form";
-import { PageGrid } from "./grid";
-import { CommonPageModel, initialCommonPageModel } from "../../model";
+import { useApp01P02ActionStore } from "../../../stores/page/app01/p02";
+import { App01P02Action } from "../../../stores/page/app01/p02/state";
+import { ROUTE_APP01 } from "../../../routes/app01/path";
 
 export function App01P01Page() {
-  const [display, setDisplay] = useState<boolean>(false);
-  const [action, setAction] = useState<App01P01Action>(App01P01Action.Empty);
-  const [form, setForm] = useState<FormModel>(initialFormModel);
-  const [gridPage, setGridPage] = useState<CommonPageModel>(initialCommonPageModel);
-  const [grid, setGrid] = useState<GridModel[]>([]);
-  const actionStore = useApp01P01ActionStore();
-  useEffect(() => {
-    console.log('App01P01Page.init.MOUNTED');
-    switch (actionStore.action) {
+  const navigate = useNavigate();
+  const initialRef = useRef(false);
+  const [action] = useState<App01P01Action>(useApp01P01ActionStore.getState().action);
+  const [form, setForm] = useState<FormModel>(() => {
+    switch (action) {
+      case App01P01Action.Empty: {
+        return initialFormModel;
+      }
       case App01P01Action.Query: {
-        setAction(App01P01Action.Query);
-        setForm({ ...actionStore.queryState! });
-        setDisplay(true);
-        break;
+        return { ...useApp01P01ActionStore.getState().queryState };
       }
       default: {
-        setAction(App01P01Action.Empty);
-        setDisplay(true);
-        break;
+        return initialFormModel;
       }
     }
-    return () => {
-      console.log('App01P01Page.init.UNMOUNTED');
-      actionStore.setAction();
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
+  const [gridPage, setGridPage] = useState<CommonPageModel>(initialCommonPageModel);
+  const [grid, setGrid] = useState<GridModel[]>([]);
+
+  const callbackQuery = useCallback(() => {
+    useProgressComponentStore.getState().open();
+    console.log(form);
+    DefaultService.run().then(() => {
+      setGridPage(produce((draft) => {
+        draft.PageNo = 1;
+        draft.PageSize = 10;
+        draft.TotalCount = 100;
+      }));
+      setGrid(produce((draft) => {
+        draft.push({
+          check: false,
+          row: (grid.length + 1).toString(),
+          first: (grid.length + 1).toString(),
+          second: (grid.length + 1).toString(),
+        });
+      }));
+      useProgressComponentStore.getState().close();
+    });
+  }, [form, grid.length]);
+
+  useEffect(() => {
+    console.log('App01P01Page.initial');
+    if (!initialRef.current) {
+      switch (action) {
+        case App01P01Action.Empty: {
+          console.log('App01P01Action.Empty');
+          useProgressComponentStore.getState().open();
+          DefaultService.run().then(() => {
+            useProgressComponentStore.getState().close();
+          });
+          break;
+        }
+        case App01P01Action.Query: {
+          console.log('App01P01Action.Query');
+          callbackQuery();
+          break;
+        }
+      }
+      initialRef.current = true;
+      useApp01P01ActionStore.getState().setAction();
+    }
+  }, [action, callbackQuery, form, grid.length]);
+
+  const onClickCreate = async () => {
+    useApp01P01ActionStore.getState().setQueryState({ ...form });
+    useApp01P02ActionStore.getState().setAction(App01P02Action.Create);
+    navigate(ROUTE_APP01.P02);
+  };
+  const onClickQuery = () => callbackQuery();
+  const onClickClear = async () => setForm(initialFormModel);
+  const onClickGridCreate = async () => {
+    useProgressComponentStore.getState().open();
+    await DefaultService.run();
+    setGrid(produce((draft) => {
+      draft.push({
+        check: false,
+        row: (grid.length + 1).toString(),
+        first: (grid.length + 1).toString(),
+        second: (grid.length + 1).toString(),
+      });
+    }));
+    useProgressComponentStore.getState().close();
+  };
+  const onClickGridRemove = async () => {
+    setGrid(produce((draft) => draft.filter((p) => !p.check)));
+  };
+  const onClickGridEdit = (index: number) => async () => {
+    useApp01P01ActionStore.getState().setQueryState({ ...form });
+    useApp01P02ActionStore.getState().setAction(App01P02Action.Modify);
+    useApp01P02ActionStore.getState().setEditState({ row: grid[index].row });
+    navigate(ROUTE_APP01.P02);
+  };
+  const onChangePage = async (
+    event: React.ChangeEvent<unknown>,
+    page: number,
+  ) => {
+    setGridPage(produce((draft) => draft.PageNo = page));
+  };
   return (
     <>
       <h2>App01P01Page</h2>
-      {display &&
-      <PageContext.Provider value={{
-        action, setAction,
-        form, setForm,
-        gridPage, setGridPage,
-        grid, setGrid,
-      }}>
-        <PageForm/>
-        {gridPage.TotalCount && <PageGrid/>}
-      </PageContext.Provider>}
+      <Grid
+        container
+        direction="row"
+        justifyContent="right"
+        alignItems="center"
+      >
+        <Grid item>
+          <Button variant="contained" onClick={onClickCreate}>
+            Create
+          </Button>
+          <Button variant="contained" onClick={onClickQuery}>
+            Query
+          </Button>
+          <Button variant="contained" onClick={onClickClear}>
+            Clear Form
+          </Button>
+        </Grid>
+      </Grid>
+      <Table>
+        <TableBody>
+          <TableRow>
+            <TableCell align="right">First</TableCell>
+            <TableCell>
+              <TextField
+                inputProps={{ maxLength: 10 }}
+                value={form.first!}
+                onChange={async (event) =>
+                  setForm(produce((draft) => { draft.first = event.target.value; }))
+                }/>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell align="right">Second</TableCell>
+            <TableCell>
+              <TextField
+                inputProps={{ maxLength: 10 }}
+                value={form.second!}
+                onChange={async (event) =>
+                  setForm(produce((draft) => { draft.second = event.target.value; }))
+                }/>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+      <Grid container direction="row" justifyContent="left" alignItems="center">
+        <Grid item>
+          <Button variant="contained" onClick={onClickGridCreate}>Create</Button>
+          <Button variant="contained" onClick={onClickGridRemove}>Remove</Button>
+        </Grid>
+      </Grid>
+      <TableContainer sx={{ maxHeight: 400 }}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell>Index</TableCell>
+              <TableCell>Check</TableCell>
+              <TableCell>First</TableCell>
+              <TableCell>Second</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {grid.map((gridItem, gridIndex) => (
+              <TableRow key={gridIndex}>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    onClick={onClickGridEdit(gridIndex)}
+                  >{gridIndex}</Button>
+                </TableCell>
+                <TableCell>
+                  <Switch
+                    checked={gridItem.check}
+                    onChange={async (event) =>
+                      setGrid(produce((draft) => { draft[gridIndex].check = event.target.checked; }))
+                    }/>
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    value={gridItem.first}
+                    onChange={async (event) =>
+                      setGrid(produce((draft) => { draft[gridIndex].first = event.target.value; }))
+                    }
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    value={gridItem.second}
+                    onChange={async (event) =>
+                      setGrid(produce((draft) => { draft[gridIndex].second = event.target.value; }))
+                    }/>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Grid item>
+          <Pagination
+            siblingCount={2}
+            count={gridPage.TotalCount}
+            page={gridPage.PageNo}
+            onChange={onChangePage}
+          />
+        </Grid>
+      </Grid>
     </>
   );
 }
