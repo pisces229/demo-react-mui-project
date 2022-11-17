@@ -52,7 +52,7 @@ export function App01P02Page() {
       initialRef.current = true;
       switch (action) {
         case App01P02Action.Empty: {
-          console.log('App01P01Action.Empty');
+          console.log('App01P02Action.Empty');
           navigate(ROUTE_APP01.P01);
           break;
         }

@@ -2,15 +2,35 @@ import { Button, Grid, Pagination, Switch, Table, TableBody, TableCell, TableCon
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import produce from "immer";
-import { CommonPageModel, initialCommonPageModel } from "../../model";
 import { useProgressComponentStore } from "../../../stores/component/progress";
 import { DefaultService } from "../../../services/default";
+import { CommonPageModel, initialCommonPageModel } from "../../model";
 import { FormModel, initialFormModel, GridModel } from "./model";
 import { useApp01P01ActionStore } from "../../../stores/page/app01/p01";
 import { App01P01Action } from "../../../stores/page/app01/p01/state";
 import { useApp01P02ActionStore } from "../../../stores/page/app01/p02";
 import { App01P02Action } from "../../../stores/page/app01/p02/state";
 import { ROUTE_APP01 } from "../../../routes/app01/path";
+import { PaginationUtilPageCount } from "../../../utils/pagination";
+
+// Mock...
+let GridData: GridModel[] = [];
+for (let i = 0; i < 25; ++i) {
+  GridData.push({
+    check: false,
+    row: i.toString(),
+    first: i.toString(),
+    second: ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
+      (c) => {
+        let r = Math.random() * 16 | 0;
+        let v = (c === 'x' ? r : ((r & 0x3) | 0x8));
+        return v.toString(16);
+      })),
+  })
+}
+const QueryGridData = (page: CommonPageModel) =>
+  GridData.slice(page.PageSize * (page.PageNo - 1), page.PageSize * page.PageNo);
+// ...Mock
 
 export function App01P01Page() {
   const navigate = useNavigate();
@@ -32,26 +52,18 @@ export function App01P01Page() {
   const [gridPage, setGridPage] = useState<CommonPageModel>(initialCommonPageModel);
   const [grid, setGrid] = useState<GridModel[]>([]);
 
-  const callbackQuery = useCallback(() => {
+  const callbackQuery = useCallback((page: CommonPageModel = gridPage) => {
     useProgressComponentStore.getState().open();
     console.log(form);
-    DefaultService.success().then((response) => {
-      setGridPage(produce((draft) => {
-        draft.PageNo = 1;
-        draft.PageSize = 10;
-        draft.TotalCount = 100;
-      }));
-      setGrid(produce((draft) => {
-        draft.push({
-          check: false,
-          row: (grid.length + 1).toString(),
-          first: (grid.length + 1).toString(),
-          second: response.data.Data,
-        });
-      }));
-      useProgressComponentStore.getState().close();
-    });
-  }, [form, grid]);
+    console.log(page);
+    DefaultService.success()
+    .then((response) => {
+      let datas = QueryGridData(page);
+      setGridPage({ ...page, TotalCount: GridData.length });
+      setGrid(datas);
+    })
+    .finally(() => useProgressComponentStore.getState().close());
+  }, [form, gridPage, setGridPage]);
 
   useEffect(() => {
     console.log('App01P01Page.initial');
@@ -60,10 +72,6 @@ export function App01P01Page() {
       switch (action) {
         case App01P01Action.Empty: {
           console.log('App01P01Action.Empty');
-          useProgressComponentStore.getState().open();
-          DefaultService.success().then(() => {
-            useProgressComponentStore.getState().close();
-          });
           break;
         }
         case App01P01Action.Query: {
@@ -97,19 +105,17 @@ export function App01P01Page() {
     useProgressComponentStore.getState().close();
   };
   const onClickGridRemove = async () => {
-    setGrid(produce((draft) => draft.filter((p) => !p.check)));
+    let filterRows = grid.filter((p) => p.check).map((o) => o.row);
+    GridData = GridData.filter((p) => !filterRows.includes(p.row));
+    let datas = QueryGridData(gridPage);
+    setGridPage({ ...gridPage, TotalCount: GridData.length });
+    setGrid([ ...datas ]);
   };
   const onClickGridEdit = (index: number) => async () => {
     useApp01P01ActionStore.getState().setQueryState({ ...form });
     useApp01P02ActionStore.getState().setAction(App01P02Action.Modify);
     useApp01P02ActionStore.getState().setEditState({ row: grid[index].row });
     navigate(ROUTE_APP01.P02);
-  };
-  const onChangePage = async (
-    event: React.ChangeEvent<unknown>,
-    page: number,
-  ) => {
-    setGridPage(produce((draft) => draft.PageNo = page));
   };
   return (
     <>
@@ -147,70 +153,69 @@ export function App01P01Page() {
           </TableRow>
         </TableBody>
       </Table>
-      <Grid container direction="row" justifyContent="left" alignItems="center">
-        <Grid item>
-          <Button variant="contained" onClick={onClickGridCreate}>Create</Button>
-          <Button variant="contained" onClick={onClickGridRemove}>Remove</Button>
+      {gridPage.TotalCount &&
+      <>
+        <Grid container direction="row" justifyContent="left" alignItems="center">
+          <Grid item>
+            <Button variant="contained" onClick={onClickGridCreate}>Create</Button>
+            <Button variant="contained" onClick={onClickGridRemove}>Remove</Button>
+          </Grid>
         </Grid>
-      </Grid>
-      <TableContainer sx={{ maxHeight: 400 }}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell>Index</TableCell>
-              <TableCell>Check</TableCell>
-              <TableCell>First</TableCell>
-              <TableCell>Second</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {grid.map((gridItem, gridIndex) => (
-              <TableRow key={gridIndex}>
-                <TableCell>
-                  <Button variant="contained" onClick={onClickGridEdit(gridIndex)}>{gridIndex}</Button>
-                </TableCell>
-                <TableCell>
-                  <Switch
-                    checked={gridItem.check}
-                    onChange={async (event) =>
-                      setGrid(produce((draft) => { draft[gridIndex].check = event.target.checked; }))
-                    }/>
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    value={gridItem.first}
-                    onChange={async (event) =>
-                      setGrid(produce((draft) => { draft[gridIndex].first = event.target.value; }))
-                    }
-                  />
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    value={gridItem.second}
-                    onChange={async (event) =>
-                      setGrid(produce((draft) => { draft[gridIndex].second = event.target.value; }))
-                    }/>
-                </TableCell>
+        <TableContainer sx={{ maxHeight: 400 }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Index</TableCell>
+                <TableCell>Check</TableCell>
+                <TableCell>Row</TableCell>
+                <TableCell>First</TableCell>
+                <TableCell>Second</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Grid
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Grid item>
-          <Pagination
-            siblingCount={2}
-            count={gridPage.TotalCount}
-            page={gridPage.PageNo}
-            onChange={onChangePage}
-          />
+            </TableHead>
+            <TableBody>
+              {grid.map((gridItem, gridIndex) => (
+                <TableRow key={gridIndex}>
+                  <TableCell>
+                    <Button variant="contained" onClick={onClickGridEdit(gridIndex)}>{gridIndex}</Button>
+                  </TableCell>
+                  <TableCell>
+                    <Switch
+                      checked={gridItem.check}
+                      onChange={async (event) =>
+                        setGrid(produce((draft) => { draft[gridIndex].check = event.target.checked; }))
+                      }/>
+                  </TableCell>
+                  <TableCell>{gridItem.row}</TableCell>
+                  <TableCell>
+                    <TextField
+                      value={gridItem.first}
+                      onChange={async (event) =>
+                        setGrid(produce((draft) => { draft[gridIndex].first = event.target.value; }))
+                      }
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      value={gridItem.second}
+                      onChange={async (event) =>
+                        setGrid(produce((draft) => { draft[gridIndex].second = event.target.value; }))
+                      }/>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Grid container direction="row" justifyContent="center" alignItems="center">
+          <Grid item>
+            <Pagination siblingCount={2}
+              count={PaginationUtilPageCount(gridPage)}
+              page={gridPage.PageNo}
+              onChange={async (event, page) => callbackQuery({ ...gridPage, PageNo: page })}
+            />
+          </Grid>
         </Grid>
-      </Grid>
+      </>}
     </>
   );
 }

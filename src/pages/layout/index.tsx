@@ -1,7 +1,6 @@
-import { Button } from '@mui/material';
-import { Outlet, useNavigate } from 'react-router';
 import {
   Box,
+  Button,
   Divider,
   Drawer,
   IconButton,
@@ -10,90 +9,140 @@ import {
   ListItemButton,
   ListItemText,
 } from '@mui/material';
+import { Outlet, useNavigate } from 'react-router';
 import MenuIcon from '@mui/icons-material/Menu';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import { useState } from 'react';
 import { MeLayoutToolbar } from './style';
 import { ErrorBoundaryComponent } from '../../components/error-boundary';
 import { ROUTE_HOME, ROUTE_LOGIN } from '../../routes/path';
 import { ROUTE_APP01 } from '../../routes/app01/path';
 import { ROUTE_APP02 } from '../../routes/app02/path';
+import { MenuItemModel } from './model';
+import { flushSync } from 'react-dom';
 
-interface Item {
-  root: boolean;
-  text: string;
-  children?: Item[];
-  path: string;
-};
-
-const itemChildren: Item[] = [
+const DefaultMenuItems: MenuItemModel[] = [
+  // first
   {
-    root: false,
-    text: 'APP02P01',
-    path: ROUTE_APP02.P01,
+    Id: '1',
+    ParentId: '',
+    Text: 'APP01',
+    Path: ROUTE_APP01.P01,
   },
   {
-    root: false,
-    text: 'APP02P02',
-    path: ROUTE_APP02.P01,
+    Id: '#',
+    ParentId: '',
+    Text: 'APP01P01',
+    Path: ROUTE_APP01.P01,
   },
   {
-    root: false,
-    text: 'APP02P03',
-    path: ROUTE_APP02.P01,
-  },
-];
-
-const itemRoot: Item[] = [
-  {
-    root: true,
-    text: 'APP01',
-    path: ROUTE_APP01.P01,
+    Id: '#',
+    ParentId: '',
+    Text: 'APP01P02',
+    Path: ROUTE_APP01.P02,
   },
   {
-    root: true,
-    text: 'APP02P',
-    path: '',
-    children: itemChildren,
-
+    Id: '2',
+    ParentId: '',
+    Text: 'APP02',
+    Path: '',
+  },
+  // second
+  {
+    Id: '20',
+    ParentId: '2',
+    Text: 'APP02',
+    Path: '',
   },
   {
-    root: true,
-    text: 'APP02P01',
-    path: ROUTE_APP02.P01,
+    Id: '21',
+    ParentId: '2',
+    Text: 'APP02P01',
+    Path: ROUTE_APP02.P01,
   },
   {
-    root: true,
-    text: 'APP02P02',
-    children: itemChildren,
-    path: ROUTE_APP02.P02,
+    Id: '22',
+    ParentId: '2',
+    Text: 'APP02P02',
+    Path: ROUTE_APP02.P02,
   },
   {
-    root: true,
-    text: 'APP02P03',
-    path: ROUTE_APP02.P03,
+    Id: '23',
+    ParentId: '2',
+    Text: 'APP02P03',
+    Path: ROUTE_APP02.P03,
+  },
+  {
+    Id: '24',
+    ParentId: '2',
+    Text: 'APP02P04',
+    Path: ROUTE_APP02.P04,
+  },
+  // second
+  {
+    Id: '201',
+    ParentId: '20',
+    Text: 'APP02P01',
+    Path: ROUTE_APP02.P01,
+  },
+  {
+    Id: '202',
+    ParentId: '20',
+    Text: 'APP02P02',
+    Path: ROUTE_APP02.P02,
+  },
+  {
+    Id: '203',
+    ParentId: '20',
+    Text: 'APP02P03',
+    Path: ROUTE_APP02.P03,
+  },
+  {
+    Id: '204',
+    ParentId: '20',
+    Text: 'APP02P04',
+    Path: ROUTE_APP02.P04,
   },
 ];
 
 export function LayoutPage() {
   const navigate = useNavigate();
   const [state, setState] = useState<boolean>(false);
-  const [datas, setDatas] = useState<Item[]>(itemRoot);
-  const [display, setDisplay] = useState<boolean>(false);
-  const onClickRoot = () => {
-    setDatas(itemRoot);
-    setDisplay(false);
-  };
-  const onClickRoute = (value: string) => {
-    navigate(value);
-    setState(false);
-  };
-  const onClickSwitch = (item: Item) => {
-    if (item.children) {
-      setDatas(item.children!);
-      setDisplay(true);
+  const [menuItems, setMenuItems] = useState<MenuItemModel[]>(DefaultMenuItems.filter((p) => p.ParentId === ''));
+  const [currentMenuItem, setCurrentMenuItem] = useState<MenuItemModel>();
+  const onClickMenuBack = () => {
+    if (currentMenuItem && currentMenuItem.ParentId) {
+      let item = DefaultMenuItems.find((p) => p.Id === currentMenuItem.ParentId);
+      if (item) {
+        console.log({ ...item });
+        console.log([ ...DefaultMenuItems.filter((p) => p.ParentId === item?.Id) ]);
+        setCurrentMenuItem({ ...item });
+        setMenuItems([ ...DefaultMenuItems.filter((p) => p.ParentId === item?.Id) ]);
+      } else {
+        setCurrentMenuItem(undefined);
+        setMenuItems([ ...DefaultMenuItems.filter((p) => p.ParentId === '') ]);
+      }
     } else {
-      navigate(item.path);
+      setCurrentMenuItem(undefined);
+      setMenuItems([ ...DefaultMenuItems.filter((p) => p.ParentId === '') ]);
+    }
+  };
+  const onClickMenuClick = (item: MenuItemModel) => {
+    if (item.Path) {
+      console.log(item);
+      navigate(item.Path);
       setState(false);
+    } else {
+      flushSync(() => {
+        setMenuItems([]);
+      });
+      console.log({ ...item });
+      console.log([ ...DefaultMenuItems.filter((p) => p.ParentId === item.Id) ]);
+      setCurrentMenuItem({ ...item });
+      setMenuItems([ ...DefaultMenuItems.filter((p) => p.ParentId === item.Id) ]);
     }
   };
   return (
@@ -109,34 +158,41 @@ export function LayoutPage() {
       </MeLayoutToolbar>
       <Drawer anchor={'left'} open={state} onClose={() => setState(false)}>
         <Box
-          sx={{ width: 250 }}
+          sx={{ minWidth: 250 }}
           role="presentation"
           // onClick={() => setState(false)}
           // onKeyDown={() => setState(false)}
         >
           <List>
-              <ListItem disablePadding>
-                <ListItemButton onClick={() => onClickRoute(ROUTE_HOME)}>
-                  <ListItemText primary={'Home'} />
-                </ListItemButton>
-              </ListItem>
-            </List>
+            <ListItem disablePadding>
+              <HomeOutlinedIcon></HomeOutlinedIcon>
+              <ListItemButton onClick={() => {
+                  navigate(ROUTE_HOME);
+                  setState(false);
+                }}>
+                <ListItemText primary={'Home'} />
+              </ListItemButton>
+            </ListItem>
+          </List>
           <Divider/>
-          {display && <>
+          {currentMenuItem && <>
             <List>
               <ListItem disablePadding>
-                <ListItemButton onClick={() => onClickRoot()}>
-                  <ListItemText primary={'Root'} />
+                <ArrowBackOutlinedIcon></ArrowBackOutlinedIcon>
+                <ListItemButton onClick={() => onClickMenuBack()}>
+                  <ListItemText primary={'Back'} />
                 </ListItemButton>
               </ListItem>
             </List>
             <Divider/>
           </>}
           <List>
-            {datas.map((data, index) => (
+            {menuItems.map((item, index) => (
               <ListItem key={index} disablePadding>
-                <ListItemButton onClick={() => onClickSwitch(data)}>
-                  <ListItemText primary={data.text} />
+                {!item.Path && <FolderOutlinedIcon></FolderOutlinedIcon>}
+                {item.Path && <DescriptionOutlinedIcon></DescriptionOutlinedIcon>}
+                <ListItemButton divider={false} onClick={() => onClickMenuClick(item)}>
+                  <ListItemText primary={item.Text} />
                 </ListItemButton>
               </ListItem>
             ))}

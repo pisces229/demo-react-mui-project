@@ -1,3 +1,3 @@
-export function useHook() {
+export function useIndex() {
 
 }
