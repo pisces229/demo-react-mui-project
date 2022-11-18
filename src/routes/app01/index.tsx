@@ -1,41 +1,39 @@
-import { useState } from 'react';
 import { RouteObject, useRoutes } from 'react-router-dom';
+import { useRouteGuard } from '../../hooks/route-guard';
 import { App01P01Page } from '../../pages/app01/p01';
 import { App01P02Page } from '../../pages/app01/p02';
-import { DefaultService } from '../../services/default';
 
-export function App01Route() {
+const ROUTE_PATH = 'APP01';
+const PATH = {
+  p01: 'p01',
+  p02: 'p02',
+};
+
+export const App01Route = () => {
   let routeObject: RouteObject[] = [
     {
       index: true,
       element: <App01P01Page />,
     },
     {
-      path: '/p01',
+      path: PATH.p01,
       element: <App01P01Page />,
     },
     {
-      path: '/p02',
+      path: PATH.p02,
       element: <App01P02Page />,
     },
     {
       path: '*',
-      element: <h3>[App01Route NoMatch]</h3>,
+      element: <h3>[NoFound]</h3>,
     },
   ];
   const element = useRoutes(routeObject);
-
-  // Router Guard
-  const [allow, setAllow] = useState<boolean>(true);
-  // DefaultService.router()
-  //   .then((response) => setAllow(response.data))
-  //   .catch((error) => setAllow(false))
-  //   .finally(() => console.log(`DefaultService.free.finally`));
-
+  const isAllowable = useRouteGuard(ROUTE_PATH);
   return (
     <>
-      {allow && element}
-      {!allow && <h3>Forbidden</h3>}
+      {isAllowable && element}
+      {!isAllowable && <h3>Forbidden</h3>}
     </>
   );
 }

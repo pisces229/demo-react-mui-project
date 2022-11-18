@@ -1,18 +1,18 @@
 export interface CommonOptionDto {
-  Value: string;
-  Text: string;
+  value: string;
+  text: string;
 }
 export interface CommonPageDto {
-  PageNo: number;
-  PageSize: number;
-  TotalCount?: number;
+  pageNo: number;
+  pageSize: number;
+  totalCount?: number;
 }
 export interface CommonPagedQueryDto<T> {
-  Data: T;
-  Page: CommonPageDto;
+  page: CommonPageDto;
+  data: T;
 }
 export interface CommonOutputDto<T> {
-  Success: boolean;
-  Message: string;
-  Data: T;
+  success: boolean;
+  message: string;
+  data: T;
 }

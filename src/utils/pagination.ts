@@ -1,9 +1,13 @@
 import { CommonPageModel } from "../pages/model";
 
-export const PaginationUtilPageCount = (page: CommonPageModel) => {
-  if (page.TotalCount) {
-    return Math.ceil(page.TotalCount / page.PageSize);
+const pageCount = (page: CommonPageModel) => {
+  if (page.totalCount) {
+    return Math.ceil(page.totalCount / page.pageSize);
   } else {
     return 0;
   }
 }
+
+export const PaginationUtil = {
+  pageCount,
+};

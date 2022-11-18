@@ -2,15 +2,15 @@ import axios from 'axios';
 import CONFIG from '../config';
 import { useAuthStore } from '../stores/auth';
 
-// Default
-const DefaultAxios = axios.create({
+// default
+const defaultAxios = axios.create({
   baseURL: CONFIG.ENDPOINT,
   headers: {
     'Cache-Control': 'no-cache',
     'Content-Type': 'application/json',
   },
 });
-DefaultAxios.interceptors.request.use(
+defaultAxios.interceptors.request.use(
   (config) => {
     // console.log(`request (config)`);
     return config;
@@ -20,7 +20,7 @@ DefaultAxios.interceptors.request.use(
     return Promise.reject(error);
   },
 );
-DefaultAxios.interceptors.response.use(
+defaultAxios.interceptors.response.use(
   (response) => {
     // console.log(`response (response)`);
     return response;
@@ -49,14 +49,14 @@ const refresh: Refresh = {
     refresh.queue.length = 0;
   },
 };
-const AuthenticateAxios = axios.create({
+const authenticateAxios = axios.create({
   baseURL: CONFIG.ENDPOINT,
   headers: {
     'Cache-Control': 'no-cache',
     'Content-Type': 'application/json',
   },
 });
-AuthenticateAxios.interceptors.request.use(
+authenticateAxios.interceptors.request.use(
   (config) => {
     config.headers = {
       ...config.headers,
@@ -69,7 +69,7 @@ AuthenticateAxios.interceptors.request.use(
     return Promise.reject(error);
   },
 );
-AuthenticateAxios.interceptors.response.use(
+authenticateAxios.interceptors.response.use(
   (response) => {
     return response;
   },
@@ -85,7 +85,7 @@ AuthenticateAxios.interceptors.response.use(
         }
         return new Promise((resolve, reject) => {
           refresh.push(() => {
-            resolve(AuthenticateAxios(originalConfig));
+            resolve(authenticateAxios(originalConfig));
           });
         });
       } else {
@@ -99,7 +99,7 @@ AuthenticateAxios.interceptors.response.use(
   },
 );
 const doRefresh = () => {
-  AuthenticateAxios.post(
+  authenticateAxios.post(
     '/refresh',
     JSON.stringify(useAuthStore.getState().token),
   )
@@ -107,4 +107,4 @@ const doRefresh = () => {
     .catch((error) => useAuthStore.setState({ token: '' }))
     .finally(() => refresh.run());
 };
-export { DefaultAxios, AuthenticateAxios };
+export { defaultAxios, authenticateAxios };

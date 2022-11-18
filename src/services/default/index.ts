@@ -1,4 +1,4 @@
-import { AuthenticateAxios, DefaultAxios } from "../axios";
+import { authenticateAxios, defaultAxios } from "../axios";
 import { DefaultDto } from "./dto";
 
 const uuid = () =>
@@ -19,32 +19,32 @@ export const DefaultService = {
     // setTimeout(resolve, 1000, { data: { Success: true, Message: '', Data: uuid() } });
     setTimeout(reject, 1000, 'Promise Fail');
   }),
-  // success: () => DefaultAxios.get<{ Success: boolean, Message: string, Data: string }>(`https://localhost:9100/success`),
-  // fail: () => DefaultAxios.get<{ Success: boolean, Message: string, Data: string }>(`https://localhost:9100/fail`),
-  free: () => DefaultAxios.get<string>(`/free`, {
+  // success: () => defaultAxios.get<{ Success: boolean, Message: string, Data: string }>(`https://localhost:9100/success`),
+  // fail: () => defaultAxios.get<{ Success: boolean, Message: string, Data: string }>(`https://localhost:9100/fail`),
+  free: () => defaultAxios.get<string>(`/free`, {
     headers: {
       'Cache-Control': 'max-age=9999'
     },
   }),
-  auth: () => AuthenticateAxios.get<string>(`/auth`),
-  router: () => DefaultAxios.get<boolean>(`/router`),
+  auth: () => authenticateAxios.get<string>(`/auth`),
+  router: () => defaultAxios.get<boolean>(`/router`),
   // Auth
   signIn: (postData: { Account: string; Password: string }) =>
-    DefaultAxios.post<number>(`/signIn`, postData),
-  validate: () => AuthenticateAxios.get(`/validate`),
-  refresh: (postData: string) => DefaultAxios.post<number>(`/refresh`, JSON.stringify(postData)),
-  signOut: () => DefaultAxios.post(`/signOut`),
+    defaultAxios.post<number>(`/signIn`, postData),
+  validate: () => authenticateAxios.get(`/validate`),
+  refresh: (postData: string) => defaultAxios.post<number>(`/refresh`, JSON.stringify(postData)),
+  signOut: () => defaultAxios.post(`/signOut`),
   // Value
   valueFromQuery: (value: string) =>
-    DefaultAxios.get<string>(`/valueFromQuery`, { params: { model: value } }),
+    defaultAxios.get<string>(`/valueFromQuery`, { params: { model: value } }),
   valueFromBody: (value: string) =>
-    DefaultAxios.post<string>(`/valueFromBody`, value),
+    defaultAxios.post<string>(`/valueFromBody`, value),
   jsonFromQuery: (value: DefaultDto) =>
-    DefaultAxios.get<DefaultDto>(`/jsonFromQuery`, {
+    defaultAxios.get<DefaultDto>(`/jsonFromQuery`, {
       params: value,
     }),
   jsonFromBody: (value: DefaultDto) =>
-    DefaultAxios.post<DefaultDto>(`/jsonFromBody`, value),
-  download: () => DefaultAxios.get<Blob>(`/download`, { responseType: 'blob' }),
-  upload: (value: FormData) => AuthenticateAxios.post<string>(`/upload`, value),
+    defaultAxios.post<DefaultDto>(`/jsonFromBody`, value),
+  download: () => defaultAxios.get<Blob>(`/download`, { responseType: 'blob' }),
+  upload: (value: FormData) => authenticateAxios.post<string>(`/upload`, value),
 };

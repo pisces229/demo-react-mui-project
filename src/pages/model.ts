@@ -1,18 +1,18 @@
 export interface CommonPageModel {
-  PageNo: number;
-  PageSize: number;
-  TotalCount?: number;
+  pageNo: number;
+  pageSize: number;
+  totalCount?: number;
 }
 export const initialCommonPageModel: CommonPageModel = {
-  PageNo: 1,
-  PageSize: 10,
+  pageNo: 1,
+  pageSize: 10,
 }
 export interface CommonModeModel {
-  Disable?: boolean;
-  Hidden?: boolean;
+  disable?: boolean;
+  hidden?: boolean;
 }
 export interface CommonOptionModel {
-  Value: string;
-  Text: string;
-  Disable?: boolean;
+  value: string;
+  text: string;
+  disable?: boolean;
 }

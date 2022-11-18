@@ -5,7 +5,7 @@ import { DefaultService } from "../../../services/default";
 import { useAuthStore } from "../../../stores/auth";
 import { useApp02P04ActionStore } from "../../../stores/page/app02/p04";
 import { App02P04Action } from "../../../stores/page/app02/p04/state";
-import { FileUtilDownload } from "../../../utils/file";
+import { FileUtil } from "../../../utils/file";
 
 export function App02P01Page() {
   const navigate = useNavigate();
@@ -90,7 +90,7 @@ export function App02P01Page() {
   };
   const onClickDownload = async () => {
     DefaultService.download()
-      .then((response) => FileUtilDownload(response))
+      .then((response) => FileUtil.download(response))
       .then((message) => console.log(message))
       .catch((error) => console.log(error))
       .finally(() => console.log(`DefaultService.download.finally`));

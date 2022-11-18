@@ -1,13 +1,16 @@
-export const CheckboxUtilAllChecked = (list: string[], values: string[]) => {
+const allChecked = (list: string[], values: string[]) => {
   return values.length > 0 && list.length === values.length && values.filter((f) => !list.includes(f)).length === 0;
 }
-export const CheckboxUtilAllChange = (values: string[], checked: boolean) => {
+
+const allChange = (values: string[], checked: boolean) => {
   return checked ? values : [];
 }
-export const CheckboxUtilChecked = (values: string[], value: string) => {
+
+const checked = (values: string[], value: string) => {
   return values.includes(value);
 }
-export const CheckboxUtilChange = (values: string[], checked: boolean, value: string) => {
+
+const change = (values: string[], checked: boolean, value: string) => {
   if (checked) {
     if (values.includes(value)) {
       return values;
@@ -22,3 +25,10 @@ export const CheckboxUtilChange = (values: string[], checked: boolean, value: st
     }
   }
 }
+
+export const CheckboxUtil = {
+  allChecked,
+  allChange,
+  checked,
+  change,
+};

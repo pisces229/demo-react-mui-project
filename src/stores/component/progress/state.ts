@@ -1,6 +1,7 @@
 export interface ProgressComponentState {
+  count: number;
   display: boolean;
   message: string;
-  open: (message?: string) => void;
+  open: () => void;
   close: () => void;
 }

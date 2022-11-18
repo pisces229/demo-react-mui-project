@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { saveAs } from 'file-saver';
 
-export const FileUtilListToArray = (fileList: FileList | null) => {
+const listToArray = (fileList: FileList | null) => {
   let result: File[] = [];
   if (fileList) {
     for (let i = 0; i < fileList!.length; ++i) {
@@ -12,7 +12,8 @@ export const FileUtilListToArray = (fileList: FileList | null) => {
   }
   return result;
 };
-export const FileUtilDownload = async (response: AxiosResponse<Blob, any>) => {
+
+const download = async (response: AxiosResponse<Blob, any>) => {
   console.log(response.headers['content-type']);
   console.log(response);
   if (response.headers['content-type'] !== 'text/plain; charset=utf-8') {
@@ -41,4 +42,9 @@ export const FileUtilDownload = async (response: AxiosResponse<Blob, any>) => {
     console.log(response);
     return Promise.resolve(response.data);
   }
+};
+
+export const FileUtil = {
+  listToArray,
+  download,
 };

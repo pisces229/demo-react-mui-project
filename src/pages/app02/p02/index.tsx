@@ -1,7 +1,8 @@
 import { Autocomplete, AutocompleteChangeDetails, AutocompleteChangeReason, Box, Button, Checkbox, Grid, MenuItem, Radio, Select, Switch, Tab, Table, TableBody, TableCell, TableRow, Tabs, TextField, TextFieldProps, Typography } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
 import { Fragment, useEffect, useState } from 'react';
-import { FileUtilListToArray } from '../../../utils/file';
+import { FileUtil } from '../../../utils/file';
+import { CheckboxUtil } from '../../../utils/checkbox';
 import { FormModel, initialFormModel } from './model';
 import { CommonOptionModel } from '../../model';
 import { useNavigate } from 'react-router';
@@ -9,13 +10,12 @@ import { useApp02P04ActionStore } from '../../../stores/page/app02/p04';
 import { ROUTE_APP02 } from '../../../routes/app02/path';
 import { App02P04Action } from '../../../stores/page/app02/p04/state';
 import { RocDatePickerComponent } from '../../../components/roc-date-picker';
-import { CheckboxUtilAllChange, CheckboxUtilAllChecked, CheckboxUtilChange, CheckboxUtilChecked } from '../../../utils/checkbox';
 import { UploadPreviewComponent } from '../../../components/upload-preview';
 
 const options: CommonOptionModel[] = [
-  { Value: '1', Text: 'A', Disable: false },
-  { Value: '2', Text: 'B', Disable: false },
-  { Value: '3', Text: 'C', Disable: false },
+  { value: '1', text: 'A', disable: false },
+  { value: '2', text: 'B', disable: false },
+  { value: '3', text: 'C', disable: false },
 ];
 
 export function App02P02Page() {
@@ -88,7 +88,7 @@ export function App02P02Page() {
                   setForm((state) => ({ ...state, selectSingleValue: event.target.value }))
                 }>
                 <MenuItem value="">None</MenuItem>
-                {options.map((item, index) => (<MenuItem key={index} value={item.Value}>{item.Text}</MenuItem>))}
+                {options.map((item, index) => (<MenuItem key={index} value={item.value}>{item.text}</MenuItem>))}
               </Select>
             </TableCell>
           </TableRow>
@@ -101,7 +101,7 @@ export function App02P02Page() {
                 onChange={async (event) =>
                   setForm((state) => ({ ...state, selectMultipleValue: event.target.value as string[] }))
                 }>
-                {options.map((item, index) => (<MenuItem key={index} value={item.Value}>{item.Text}</MenuItem>))}
+                {options.map((item, index) => (<MenuItem key={index} value={item.value}>{item.text}</MenuItem>))}
               </Select>
             </TableCell>
           </TableRow>
@@ -112,9 +112,9 @@ export function App02P02Page() {
                 sx={{ width: 300 }}
                 disablePortal
                 options={options}
-                getOptionLabel={(option) => option.Text}
-                getOptionDisabled={(option) => option.Disable!}
-                isOptionEqualToValue={(option, value) => option.Value === value.Value}
+                getOptionLabel={(option) => option.text}
+                getOptionDisabled={(option) => option.disable!}
+                isOptionEqualToValue={(option, value) => option.value === value.value}
                 value={form.autocompleteValue}
                 renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => <TextField {...params} />}
                 onChange={async (
@@ -134,11 +134,11 @@ export function App02P02Page() {
               {options.map((item, index) => (
                 <Fragment key={index}>
                   <Radio
-                    value={item.Value}
-                    checked={item.Value === form.radioValue}
+                    value={item.value}
+                    checked={item.value === form.radioValue}
                     onChange={async (event) =>
                       setForm((state) => ({ ...state, radioValue: event.target.value }))
-                    }/>{item.Text}
+                    }/>{item.text}
                 </Fragment>))
               }
             </TableCell>
@@ -147,24 +147,24 @@ export function App02P02Page() {
             <TableCell align="right">Checkbox</TableCell>
             <TableCell>
               <Checkbox
-                checked={CheckboxUtilAllChecked(options.map(item => item.Value), form.checkboxValue)}
+                checked={CheckboxUtil.allChecked(options.map(item => item.value), form.checkboxValue)}
                 onChange={async (event) =>
                   setForm((state) => ({
                     ...state,
-                    checkboxValue: CheckboxUtilAllChange(options.map(item => item.Value), event.target.checked)
+                    checkboxValue: CheckboxUtil.allChange(options.map(item => item.value), event.target.checked)
                   }))
                 }/>ALL
               {options.map((item, index) => (
                 <Fragment key={index}>
                   <Checkbox
-                    value={item.Value}
-                    checked={CheckboxUtilChecked(form.checkboxValue, item.Value)}
+                    value={item.value}
+                    checked={CheckboxUtil.checked(form.checkboxValue, item.value)}
                     onChange={async (event) =>
                       setForm((state) => ({
                         ...state,
-                        checkboxValue: CheckboxUtilChange(form.checkboxValue, event.target.checked, event.target.value)
+                        checkboxValue: CheckboxUtil.change(form.checkboxValue, event.target.checked, event.target.value)
                       }))
-                    }/>{item.Text}
+                    }/>{item.text}
                 </Fragment>))
               }
             </TableCell>
@@ -199,7 +199,7 @@ export function App02P02Page() {
               <label>
                 <input type="file" multiple hidden
                   onChange={async (event) =>
-                    setForm((state) => ({ ...state, fileValue: FileUtilListToArray(event.target.files) }))
+                    setForm((state) => ({ ...state, fileValue: FileUtil.listToArray(event.target.files) }))
                   }/>
                 <Button fullWidth={true} variant="contained" component="span" endIcon={<UploadIcon />}>Upload</Button>
               </label>

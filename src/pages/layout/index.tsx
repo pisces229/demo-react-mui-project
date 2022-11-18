@@ -27,122 +27,122 @@ import { flushSync } from 'react-dom';
 const DefaultMenuItems: MenuItemModel[] = [
   // first
   {
-    Id: '1',
-    ParentId: '',
-    Text: 'APP01',
-    Path: ROUTE_APP01.P01,
+    id: '1',
+    parentId: '',
+    text: 'APP01',
+    path: ROUTE_APP01.P01,
   },
   {
-    Id: '#',
-    ParentId: '',
-    Text: 'APP01P01',
-    Path: ROUTE_APP01.P01,
+    id: '#',
+    parentId: '',
+    text: 'APP01P01',
+    path: ROUTE_APP01.P01,
   },
   {
-    Id: '#',
-    ParentId: '',
-    Text: 'APP01P02',
-    Path: ROUTE_APP01.P02,
+    id: '#',
+    parentId: '',
+    text: 'APP01P02',
+    path: ROUTE_APP01.P02,
   },
   {
-    Id: '2',
-    ParentId: '',
-    Text: 'APP02',
-    Path: '',
-  },
-  // second
-  {
-    Id: '20',
-    ParentId: '2',
-    Text: 'APP02',
-    Path: '',
-  },
-  {
-    Id: '21',
-    ParentId: '2',
-    Text: 'APP02P01',
-    Path: ROUTE_APP02.P01,
-  },
-  {
-    Id: '22',
-    ParentId: '2',
-    Text: 'APP02P02',
-    Path: ROUTE_APP02.P02,
-  },
-  {
-    Id: '23',
-    ParentId: '2',
-    Text: 'APP02P03',
-    Path: ROUTE_APP02.P03,
-  },
-  {
-    Id: '24',
-    ParentId: '2',
-    Text: 'APP02P04',
-    Path: ROUTE_APP02.P04,
+    id: '2',
+    parentId: '',
+    text: 'APP02',
+    path: '',
   },
   // second
   {
-    Id: '201',
-    ParentId: '20',
-    Text: 'APP02P01',
-    Path: ROUTE_APP02.P01,
+    id: '20',
+    parentId: '2',
+    text: 'APP02',
+    path: '',
   },
   {
-    Id: '202',
-    ParentId: '20',
-    Text: 'APP02P02',
-    Path: ROUTE_APP02.P02,
+    id: '21',
+    parentId: '2',
+    text: 'APP02P01',
+    path: ROUTE_APP02.P01,
   },
   {
-    Id: '203',
-    ParentId: '20',
-    Text: 'APP02P03',
-    Path: ROUTE_APP02.P03,
+    id: '22',
+    parentId: '2',
+    text: 'APP02P02',
+    path: ROUTE_APP02.P02,
   },
   {
-    Id: '204',
-    ParentId: '20',
-    Text: 'APP02P04',
-    Path: ROUTE_APP02.P04,
+    id: '23',
+    parentId: '2',
+    text: 'APP02P03',
+    path: ROUTE_APP02.P03,
+  },
+  {
+    id: '24',
+    parentId: '2',
+    text: 'APP02P04',
+    path: ROUTE_APP02.P04,
+  },
+  // second
+  {
+    id: '201',
+    parentId: '20',
+    text: 'APP02P01',
+    path: ROUTE_APP02.P01,
+  },
+  {
+    id: '202',
+    parentId: '20',
+    text: 'APP02P02',
+    path: ROUTE_APP02.P02,
+  },
+  {
+    id: '203',
+    parentId: '20',
+    text: 'APP02P03',
+    path: ROUTE_APP02.P03,
+  },
+  {
+    id: '204',
+    parentId: '20',
+    text: 'APP02P04',
+    path: ROUTE_APP02.P04,
   },
 ];
 
 export function LayoutPage() {
   const navigate = useNavigate();
   const [state, setState] = useState<boolean>(false);
-  const [menuItems, setMenuItems] = useState<MenuItemModel[]>(DefaultMenuItems.filter((p) => p.ParentId === ''));
+  const [menuItems, setMenuItems] = useState<MenuItemModel[]>(DefaultMenuItems.filter((p) => p.parentId === ''));
   const [currentMenuItem, setCurrentMenuItem] = useState<MenuItemModel>();
   const onClickMenuBack = () => {
-    if (currentMenuItem && currentMenuItem.ParentId) {
-      let item = DefaultMenuItems.find((p) => p.Id === currentMenuItem.ParentId);
+    if (currentMenuItem && currentMenuItem.parentId) {
+      let item = DefaultMenuItems.find((p) => p.id === currentMenuItem.parentId);
       if (item) {
-        console.log({ ...item });
-        console.log([ ...DefaultMenuItems.filter((p) => p.ParentId === item?.Id) ]);
+        // console.log({ ...item });
+        // console.log([ ...DefaultMenuItems.filter((p) => p.parentId === item?.id) ]);
         setCurrentMenuItem({ ...item });
-        setMenuItems([ ...DefaultMenuItems.filter((p) => p.ParentId === item?.Id) ]);
+        setMenuItems([ ...DefaultMenuItems.filter((p) => p.parentId === item?.id) ]);
       } else {
         setCurrentMenuItem(undefined);
-        setMenuItems([ ...DefaultMenuItems.filter((p) => p.ParentId === '') ]);
+        setMenuItems([ ...DefaultMenuItems.filter((p) => p.parentId === '') ]);
       }
     } else {
       setCurrentMenuItem(undefined);
-      setMenuItems([ ...DefaultMenuItems.filter((p) => p.ParentId === '') ]);
+      setMenuItems([ ...DefaultMenuItems.filter((p) => p.parentId === '') ]);
     }
   };
   const onClickMenuClick = (item: MenuItemModel) => {
-    if (item.Path) {
-      console.log(item);
-      navigate(item.Path);
+    if (item.path) {
+      // console.log(item);
+      navigate(item.path);
       setState(false);
     } else {
       flushSync(() => {
         setMenuItems([]);
       });
-      console.log({ ...item });
-      console.log([ ...DefaultMenuItems.filter((p) => p.ParentId === item.Id) ]);
+      // console.log({ ...item });
+      // console.log([ ...DefaultMenuItems.filter((p) => p.parentId === item.id) ]);
       setCurrentMenuItem({ ...item });
-      setMenuItems([ ...DefaultMenuItems.filter((p) => p.ParentId === item.Id) ]);
+      setMenuItems([ ...DefaultMenuItems.filter((p) => p.parentId === item.id) ]);
     }
   };
   return (
@@ -189,10 +189,10 @@ export function LayoutPage() {
           <List>
             {menuItems.map((item, index) => (
               <ListItem key={index} disablePadding>
-                {!item.Path && <FolderOutlinedIcon></FolderOutlinedIcon>}
-                {item.Path && <DescriptionOutlinedIcon></DescriptionOutlinedIcon>}
+                {!item.path && <FolderOutlinedIcon></FolderOutlinedIcon>}
+                {item.path && <DescriptionOutlinedIcon></DescriptionOutlinedIcon>}
                 <ListItemButton divider={false} onClick={() => onClickMenuClick(item)}>
-                  <ListItemText primary={item.Text} />
+                  <ListItemText primary={item.text} />
                 </ListItemButton>
               </ListItem>
             ))}

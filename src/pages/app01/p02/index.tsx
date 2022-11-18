@@ -2,7 +2,7 @@ import { Button, Grid, Table, TableBody, TableCell, TableRow, TextField } from "
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import produce from "immer";
-import { DefaultService } from "../../../services/default";
+import { AppService } from "../../../services/app";
 import { useProgressComponentStore } from "../../../stores/component/progress";
 import { FormModel, initialFormModel } from "./model";
 import { useApp01P01ActionStore } from "../../../stores/page/app01/p01";
@@ -36,14 +36,15 @@ export function App01P02Page() {
   const callbackQuery = useCallback(() => {
     useProgressComponentStore.getState().open();
     console.log(form);
-    DefaultService.success().then((response) => {
-      setForm(produce((draft) => {
-        draft.row = form.row;
-        draft.first = `first[${form.row}]`;
-        draft.second = response.data.Data;
-      }));
-      useProgressComponentStore.getState().close();
-    });
+    AppService.query(form.row)
+    .then((response) => {
+      if (response.data.success) {
+        setForm(produce(() => response.data.data));
+      } else {
+        useMessageComponentStore.getState().warning(response.data.message);
+      }
+    })
+    .finally(() => useProgressComponentStore.getState().close());
   }, [form]);
 
   useEffect(() => {
@@ -74,57 +75,47 @@ export function App01P02Page() {
     useApp01P01ActionStore.getState().setAction(App01P01Action.Query);
     navigate(ROUTE_APP01.P01);
   };
-  const onClickSave = async () => callbackQuery();
+  const onClickSave = async () => {
+    switch (action) {
+      case App01P02Action.Create: {
+        useProgressComponentStore.getState().open();
+        await AppService.create(form)
+        .then((response) => {
+          if (response.data.success) {
+            useMessageComponentStore.getState().success(response.data.message);
+            setForm(produce((draft) => { draft.row = response.data.data.row; }));
+          } else {
+            useMessageComponentStore.getState().warning(response.data.message);
+          }
+        })
+        .finally(() => useProgressComponentStore.getState().close());
+        break;
+      }
+      case App01P02Action.Modify: {
+        useProgressComponentStore.getState().open();
+        await AppService.modify(form)
+        .then((response) => {
+          if (response.data.success) {
+            useMessageComponentStore.getState().success(response.data.message);
+            callbackQuery();
+          } else {
+            useMessageComponentStore.getState().warning(response.data.message);
+          }
+        })
+        .finally(() => useProgressComponentStore.getState().close());
+        break;
+      }
+    }
+  };
   const onClickClear = async () => setForm(initialFormModel);
-
-  const onClickSuccess = async () => {
-    useProgressComponentStore.getState().open();
-    let result = await DefaultService.success()
-    .then((response) => {
-      console.log('then', response);
-      useMessageComponentStore.getState().success('message');
-      return true;
-    })
-    .catch((error) => {
-      console.log('catch', error);
-      useMessageComponentStore.getState().error('message');
-      return false;
-    })
-    .finally(() => {
-      console.log('finally');
-    });
-    console.log('result', result);
-    useProgressComponentStore.getState().close();
-  };
-  const onClickFail = async () => {
-    useProgressComponentStore.getState().open();
-    let result = await DefaultService.fail()
-    .then((response) => {
-      console.log('then', response);
-      useMessageComponentStore.getState().success('message');
-      return true;
-    })
-    .catch((error) => {
-      console.log('catch', error);
-      useMessageComponentStore.getState().error('message');
-      return false;
-    })
-    .finally(() => {
-      console.log('finally');
-    });
-    console.log('result', result);
-    useProgressComponentStore.getState().close();
-  };
   return (
     <>
+      <h2>App01P02Page</h2>
       <Grid container direction="row" justifyContent="right" alignItems="center">
         <Grid item>
           <Button variant="contained" onClick={onClickBack}>Back</Button>
           <Button variant="contained" onClick={onClickSave}>Save</Button>
           <Button variant="contained" onClick={onClickClear}>Clear</Button>
-          {/* success / fail */}
-          <Button variant="contained" onClick={onClickSuccess}>Success</Button>
-          <Button variant="contained" onClick={onClickFail}>Fail</Button>
         </Grid>
       </Grid>
       <Table>

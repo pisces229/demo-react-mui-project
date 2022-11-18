@@ -2,8 +2,9 @@ import { Button, Grid, Pagination, Switch, Table, TableBody, TableCell, TableCon
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import produce from "immer";
+import { PaginationUtil } from "../../../utils/pagination";
 import { useProgressComponentStore } from "../../../stores/component/progress";
-import { DefaultService } from "../../../services/default";
+import { AppService } from "../../../services/app";
 import { CommonPageModel, initialCommonPageModel } from "../../model";
 import { FormModel, initialFormModel, GridModel } from "./model";
 import { useApp01P01ActionStore } from "../../../stores/page/app01/p01";
@@ -11,26 +12,7 @@ import { App01P01Action } from "../../../stores/page/app01/p01/state";
 import { useApp01P02ActionStore } from "../../../stores/page/app01/p02";
 import { App01P02Action } from "../../../stores/page/app01/p02/state";
 import { ROUTE_APP01 } from "../../../routes/app01/path";
-import { PaginationUtilPageCount } from "../../../utils/pagination";
-
-// Mock...
-let GridData: GridModel[] = [];
-for (let i = 0; i < 25; ++i) {
-  GridData.push({
-    check: false,
-    row: i.toString(),
-    first: i.toString(),
-    second: ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
-      (c) => {
-        let r = Math.random() * 16 | 0;
-        let v = (c === 'x' ? r : ((r & 0x3) | 0x8));
-        return v.toString(16);
-      })),
-  })
-}
-const QueryGridData = (page: CommonPageModel) =>
-  GridData.slice(page.PageSize * (page.PageNo - 1), page.PageSize * page.PageNo);
-// ...Mock
+import { useMessageComponentStore } from "../../../stores/component/message";
 
 export function App01P01Page() {
   const navigate = useNavigate();
@@ -54,13 +36,15 @@ export function App01P01Page() {
 
   const callbackQuery = useCallback((page: CommonPageModel = gridPage) => {
     useProgressComponentStore.getState().open();
-    console.log(form);
-    console.log(page);
-    DefaultService.success()
+    AppService.queryGrid({
+      page: page,
+      data: form,
+    })
     .then((response) => {
-      let datas = QueryGridData(page);
-      setGridPage({ ...page, TotalCount: GridData.length });
-      setGrid(datas);
+      if (response.data.success) {
+        setGridPage(response.data.data.page);
+        setGrid(response.data.data.data.map((data) => ({ ...data, check: false })));
+      }
     })
     .finally(() => useProgressComponentStore.getState().close());
   }, [form, gridPage, setGridPage]);
@@ -91,25 +75,14 @@ export function App01P01Page() {
   };
   const onClickQuery = () => callbackQuery();
   const onClickClear = async () => setForm(initialFormModel);
-  const onClickGridCreate = async () => {
-    useProgressComponentStore.getState().open();
-    let response = await DefaultService.success();
-    setGrid(produce((draft) => {
-      draft.push({
-        check: false,
-        row: (grid.length + 1).toString(),
-        first: (grid.length + 1).toString(),
-        second: response.data.Data,
-      });
-    }));
-    useProgressComponentStore.getState().close();
-  };
   const onClickGridRemove = async () => {
-    let filterRows = grid.filter((p) => p.check).map((o) => o.row);
-    GridData = GridData.filter((p) => !filterRows.includes(p.row));
-    let datas = QueryGridData(gridPage);
-    setGridPage({ ...gridPage, TotalCount: GridData.length });
-    setGrid([ ...datas ]);
+    useProgressComponentStore.getState().open();
+    AppService.remove(grid.filter((o) => o.check).map((o) => o.row))
+    .then((response) => {
+      useMessageComponentStore.getState().success(response.data.message);
+      callbackQuery();
+    })
+    .finally(() => useProgressComponentStore.getState().close());
   };
   const onClickGridEdit = (index: number) => async () => {
     useApp01P01ActionStore.getState().setQueryState({ ...form });
@@ -153,11 +126,10 @@ export function App01P01Page() {
           </TableRow>
         </TableBody>
       </Table>
-      {gridPage.TotalCount &&
+      {gridPage.totalCount &&
       <>
         <Grid container direction="row" justifyContent="left" alignItems="center">
           <Grid item>
-            <Button variant="contained" onClick={onClickGridCreate}>Create</Button>
             <Button variant="contained" onClick={onClickGridRemove}>Remove</Button>
           </Grid>
         </Grid>
@@ -209,9 +181,9 @@ export function App01P01Page() {
         <Grid container direction="row" justifyContent="center" alignItems="center">
           <Grid item>
             <Pagination siblingCount={2}
-              count={PaginationUtilPageCount(gridPage)}
-              page={gridPage.PageNo}
-              onChange={async (event, page) => callbackQuery({ ...gridPage, PageNo: page })}
+              count={PaginationUtil.pageCount(gridPage)}
+              page={gridPage.pageNo}
+              onChange={async (event, page) => callbackQuery({ ...gridPage, pageNo: page })}
             />
           </Grid>
         </Grid>
