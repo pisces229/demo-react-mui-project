@@ -1,12 +1,12 @@
-export interface FormModel {
+export interface FormState {
   first: string;
   second: string;
 }
-export const initialFormModel: FormModel = {
+export const initialFormState: FormState = {
   first: '',
   second: '',
 }
-export interface GridModel {
+export interface GridState {
   check: boolean;
   row: string;
   first: string;

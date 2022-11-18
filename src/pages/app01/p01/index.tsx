@@ -5,36 +5,37 @@ import produce from "immer";
 import { PaginationUtil } from "../../../utils/pagination";
 import { useProgressComponentStore } from "../../../stores/component/progress";
 import { AppService } from "../../../services/app";
-import { CommonPageModel, initialCommonPageModel } from "../../model";
-import { FormModel, initialFormModel, GridModel } from "./model";
+import { CommonPageState, initialCommonPageState } from "../../state";
+import { FormState, initialFormState, GridState } from "./state";
 import { useApp01P01ActionStore } from "../../../stores/page/app01/p01";
 import { App01P01Action } from "../../../stores/page/app01/p01/state";
 import { useApp01P02ActionStore } from "../../../stores/page/app01/p02";
 import { App01P02Action } from "../../../stores/page/app01/p02/state";
-import { ROUTE_APP01 } from "../../../routes/app01/path";
+import { ROUTE_APP01 } from "../../../routes/app01/route";
 import { useMessageComponentStore } from "../../../stores/component/message";
 
 export function App01P01Page() {
   const navigate = useNavigate();
   const initialRef = useRef(false);
   const [action] = useState<App01P01Action>(useApp01P01ActionStore.getState().action);
-  const [form, setForm] = useState<FormModel>(() => {
+  const [form, setForm] = useState<FormState>(() => {
     switch (action) {
       case App01P01Action.Empty: {
-        return initialFormModel;
+        return initialFormState;
       }
       case App01P01Action.Query: {
         return { ...useApp01P01ActionStore.getState().queryState };
       }
       default: {
-        return initialFormModel;
+        return initialFormState;
       }
     }
   });
-  const [gridPage, setGridPage] = useState<CommonPageModel>(initialCommonPageModel);
-  const [grid, setGrid] = useState<GridModel[]>([]);
+  const [gridPage, setGridPage] = useState<CommonPageState>(initialCommonPageState);
+  const [gridTotalCount, setGridTotalCount] = useState<number>();
+  const [grid, setGrid] = useState<GridState[]>([]);
 
-  const callbackQuery = useCallback((page: CommonPageModel = gridPage) => {
+  const callbackQuery = useCallback((page: CommonPageState = gridPage) => {
     useProgressComponentStore.getState().open();
     AppService.queryGrid({
       page: page,
@@ -42,12 +43,13 @@ export function App01P01Page() {
     })
     .then((response) => {
       if (response.data.success) {
-        setGridPage(response.data.data.page);
+        setGridPage(page);
+        setGridTotalCount(response.data.data.totalCount);
         setGrid(response.data.data.data.map((data) => ({ ...data, check: false })));
       }
     })
     .finally(() => useProgressComponentStore.getState().close());
-  }, [form, gridPage, setGridPage]);
+  }, [form, gridPage]);
 
   useEffect(() => {
     console.log('App01P01Page.initial');
@@ -74,7 +76,7 @@ export function App01P01Page() {
     navigate(ROUTE_APP01.P02);
   };
   const onClickQuery = () => callbackQuery();
-  const onClickClear = async () => setForm(initialFormModel);
+  const onClickClear = async () => setForm(initialFormState);
   const onClickGridRemove = async () => {
     useProgressComponentStore.getState().open();
     AppService.remove(grid.filter((o) => o.check).map((o) => o.row))
@@ -126,7 +128,7 @@ export function App01P01Page() {
           </TableRow>
         </TableBody>
       </Table>
-      {gridPage.totalCount &&
+      {gridTotalCount &&
       <>
         <Grid container direction="row" justifyContent="left" alignItems="center">
           <Grid item>
@@ -181,7 +183,7 @@ export function App01P01Page() {
         <Grid container direction="row" justifyContent="center" alignItems="center">
           <Grid item>
             <Pagination siblingCount={2}
-              count={PaginationUtil.pageCount(gridPage)}
+              count={PaginationUtil.pageCount(gridPage.pageSize, gridTotalCount)}
               page={gridPage.pageNo}
               onChange={async (event, page) => callbackQuery({ ...gridPage, pageNo: page })}
             />

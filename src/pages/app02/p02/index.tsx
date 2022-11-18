@@ -3,16 +3,16 @@ import UploadIcon from '@mui/icons-material/Upload';
 import { Fragment, useEffect, useState } from 'react';
 import { FileUtil } from '../../../utils/file';
 import { CheckboxUtil } from '../../../utils/checkbox';
-import { FormModel, initialFormModel } from './model';
-import { CommonOptionModel } from '../../model';
+import { FormState, initialFormState } from './state';
+import { CommonOptionState } from '../../state';
 import { useNavigate } from 'react-router';
 import { useApp02P04ActionStore } from '../../../stores/page/app02/p04';
-import { ROUTE_APP02 } from '../../../routes/app02/path';
+import { ROUTE_APP02 } from '../../../routes/app02/route';
 import { App02P04Action } from '../../../stores/page/app02/p04/state';
 import { RocDatePickerComponent } from '../../../components/roc-date-picker';
 import { UploadPreviewComponent } from '../../../components/upload-preview';
 
-const options: CommonOptionModel[] = [
+const options: CommonOptionState[] = [
   { value: '1', text: 'A', disable: false },
   { value: '2', text: 'B', disable: false },
   { value: '3', text: 'C', disable: false },
@@ -21,7 +21,7 @@ const options: CommonOptionModel[] = [
 export function App02P02Page() {
   const navigate = useNavigate();
   const app02P04ActionStore = useApp02P04ActionStore();
-  const [form, setForm] = useState<FormModel>(initialFormModel);
+  const [form, setForm] = useState<FormState>(initialFormState);
   const [tab, setTab] = useState(0);
   useEffect(() => {
     console.log(form);
@@ -119,9 +119,9 @@ export function App02P02Page() {
                 renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => <TextField {...params} />}
                 onChange={async (
                   event: React.SyntheticEvent<Element, Event>,
-                  value: CommonOptionModel | null,
+                  value: CommonOptionState | null,
                   reason: AutocompleteChangeReason,
-                  details?: AutocompleteChangeDetails<CommonOptionModel> | undefined
+                  details?: AutocompleteChangeDetails<CommonOptionState> | undefined
                 ) => {
                   setForm((state) => ({ ...state, autocompleteValue: value }))
                 }}

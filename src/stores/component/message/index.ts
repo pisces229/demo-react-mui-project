@@ -1,7 +1,17 @@
 import create from "zustand";
-import { MessageComponentState } from "./state";
 
-export const useMessageComponentStore = create<MessageComponentState>()(
+interface Store {
+  display: boolean;
+  message: string;
+  severity: 'success' | 'error' | 'info' | 'warning';
+  success: (message: string) => void;
+  error: (message: string) => void;
+  info: (message: string) => void;
+  warning: (message: string) => void;
+  close: () => void;
+}
+
+export const useMessageComponentStore = create<Store>()(
   (set, get) => ({
     display: false,
     message: '',

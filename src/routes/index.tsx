@@ -48,13 +48,13 @@ export function RootRoute() {
         },
         {
           path: '*',
-          element: <h2>[DefaultLayout NoMatch]</h2>,
+          element: <h2>[NotFound]</h2>,
         },
       ],
     },
     {
       path: '*',
-      element: <h2>[RootRoute NoMatch]</h2>,
+      element: <h2>[NotFound]</h2>,
     },
   ];
   const element = useRoutes(routeObject);

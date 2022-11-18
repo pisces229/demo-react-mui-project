@@ -4,31 +4,31 @@ import { useNavigate } from "react-router";
 import produce from "immer";
 import { AppService } from "../../../services/app";
 import { useProgressComponentStore } from "../../../stores/component/progress";
-import { FormModel, initialFormModel } from "./model";
+import { FormState, initialFormState } from "./state";
 import { useApp01P01ActionStore } from "../../../stores/page/app01/p01";
 import { App01P01Action } from "../../../stores/page/app01/p01/state";
 import { useApp01P02ActionStore } from "../../../stores/page/app01/p02";
 import { App01P02Action } from "../../../stores/page/app01/p02/state";
-import { ROUTE_APP01 } from "../../../routes/app01/path";
+import { ROUTE_APP01 } from "../../../routes/app01/route";
 import { useMessageComponentStore } from "../../../stores/component/message";
 
 export function App01P02Page() {
   const navigate = useNavigate();
   const initialRef = useRef(false);
   const [action] = useState<App01P02Action>(useApp01P02ActionStore.getState().action);
-  const [form, setForm] = useState<FormModel>(() => {
+  const [form, setForm] = useState<FormState>(() => {
     switch (useApp01P02ActionStore.getState().action) {
       case App01P02Action.Empty: {
-        return initialFormModel;
+        return initialFormState;
       }
       case App01P02Action.Create: {
-        return initialFormModel;
+        return initialFormState;
       }
       case App01P02Action.Modify: {
-        return { ...initialFormModel, ...useApp01P02ActionStore.getState().editState };
+        return { ...initialFormState, ...useApp01P02ActionStore.getState().editState };
       }
       default: {
-        return initialFormModel;
+        return initialFormState;
       }
     }
   });
@@ -107,7 +107,7 @@ export function App01P02Page() {
       }
     }
   };
-  const onClickClear = async () => setForm(initialFormModel);
+  const onClickClear = async () => setForm(initialFormState);
   return (
     <>
       <h2>App01P02Page</h2>

@@ -1,18 +1,18 @@
-import { CommonOptionModel } from "../../model";
+import { CommonOptionState } from "../../state";
 
-export interface FormModel {
+export interface FormState {
   textFieldValue: string;
   rocDateValue: string;
   selectSingleValue: string;
   selectMultipleValue: string[];
-  autocompleteValue: CommonOptionModel | null;
+  autocompleteValue: CommonOptionState | null;
   radioValue: string;
   checkboxValue: string[];
   switchValue: boolean;
   textareaValue: string;
   fileValue: File[];
 }
-export const initialFormModel: FormModel = {
+export const initialFormState: FormState = {
   textFieldValue: '',
   rocDateValue: '',
   selectSingleValue: '',

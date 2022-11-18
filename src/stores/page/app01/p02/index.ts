@@ -5,14 +5,16 @@ import {
   initApp01P02ActionEditState
 } from "./state";
 
-export const useApp01P02ActionStore = create<{
+interface Store {
   back: string;
   setBack: (value?: string) => void;
   action: App01P02Action;
   setAction: (value?: App01P02Action) => void;
   editState: App01P02ActionEditState;
   setEditState: (state?: App01P02ActionEditState) => void;
-}>()(
+}
+
+export const useApp01P02ActionStore = create<Store>()(
   (set, get) => ({
     back: '',
     setBack: (value: string = '') => set(() => ({ back: value })),

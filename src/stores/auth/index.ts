@@ -1,12 +1,12 @@
 import create from "zustand";
 import { persist } from 'zustand/middleware'
 
-interface StoreState {
+interface Store {
   token: string;
   setToken: (value: string) => void;
 }
 
-export const useAuthStore = create<StoreState>()(
+export const useAuthStore = create<Store>()(
   persist(
     (set, get) => ({
       token: '',

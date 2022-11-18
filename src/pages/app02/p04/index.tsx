@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { ROUTE_HOME } from "../../../routes/path";
+import { ROUTE } from "../../../routes/route";
 import { useApp02P04ActionStore } from "../../../stores/page/app02/p04";
 import { App02P04Action } from "../../../stores/page/app02/p04/state";
 import { PageContext } from "./context";
@@ -20,7 +20,7 @@ export function App02P04Page() {
         break;
       }
       default: {
-        navigate(ROUTE_HOME);
+        navigate(ROUTE.HOME);
       }
     }
     actionState.setBack();

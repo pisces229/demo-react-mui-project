@@ -1,6 +1,6 @@
 import { Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router";
-import { ROUTE_APP02 } from "../../../routes/app02/path";
+import { ROUTE_APP02 } from "../../../routes/app02/route";
 import { DefaultService } from "../../../services/default";
 import { useAuthStore } from "../../../stores/auth";
 import { useApp02P04ActionStore } from "../../../stores/page/app02/p04";

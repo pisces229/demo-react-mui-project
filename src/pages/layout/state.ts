@@ -1,4 +1,4 @@
-export interface MenuItemModel {
+export interface LayoutMenuItemOutputState {
   id: string;
   parentId: string;
   text: string;

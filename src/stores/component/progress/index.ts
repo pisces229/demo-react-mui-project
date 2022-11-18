@@ -1,7 +1,14 @@
 import create from "zustand";
-import { ProgressComponentState } from "./state";
 
-export const useProgressComponentStore = create<ProgressComponentState>()(
+interface Store {
+  count: number;
+  display: boolean;
+  message: string;
+  open: () => void;
+  close: () => void;
+}
+
+export const useProgressComponentStore = create<Store>()(
   (set, get) => ({
     count: 0,
     display: false,

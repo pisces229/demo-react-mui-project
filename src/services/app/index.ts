@@ -1,12 +1,14 @@
 import {
-  CommonOutputDto,
-  CommonPagedQueryDto,
-} from "../dto";
+  CommonOutputModel,
+  CommonPagedQueryInputModel,
+  CommonPagedQueryOutputModel,
+} from "../model";
 import {
-  AppResponseDto,
-  AppMockData,
-  AppQueryInputDto,
-} from "./dto";
+  AppModel,
+  AppResponseModel,
+  AppQueryInputModel,
+  AppQueryOutputModel,
+} from "./model";
 
 const createRow = () => ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
   (c) => {
@@ -15,7 +17,7 @@ const createRow = () => ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
     return v.toString(16);
   }));
 
-let mockDatas: AppMockData[] = [];
+let mockDatas: AppModel[] = [];
 for (let i = 0; i < 25; ++i) {
   mockDatas.push({
     row: createRow(),
@@ -26,31 +28,27 @@ for (let i = 0; i < 25; ++i) {
 
 export const AppService = {
   route: (request: string) =>
-    new Promise<AppResponseDto<boolean>>((resolve, reject) => {
+    new Promise<AppResponseModel<boolean>>((resolve, reject) => {
       console.log(request);
-      let response: AppResponseDto<boolean> = {
+      let response: AppResponseModel<boolean> = {
         data: true,
       };
       setTimeout(resolve, 1000, response);
       // setTimeout(reject, 500, 'Promise Fail');
     }),
-  queryGrid: (request: CommonPagedQueryDto<AppQueryInputDto>) =>
-    new Promise<AppResponseDto<CommonOutputDto<CommonPagedQueryDto<AppMockData[]>>>>((resolve, reject) => {
+  queryGrid: (request: CommonPagedQueryInputModel<AppQueryInputModel>) =>
+    new Promise<AppResponseModel<CommonOutputModel<CommonPagedQueryOutputModel<AppQueryOutputModel>>>>((resolve, reject) => {
       console.log(request);
       let data = mockDatas.slice(
         request.page.pageSize * (request.page.pageNo - 1),
         request.page.pageSize * request.page.pageNo);
-      let response: AppResponseDto<CommonOutputDto<CommonPagedQueryDto<AppMockData[]>>> = {
+      let response: AppResponseModel<CommonOutputModel<CommonPagedQueryOutputModel<AppQueryOutputModel>>> = {
         data: {
           success: true,
           message: '',
           data: {
-            page: {
-              pageNo: request.page.pageNo,
-              pageSize: request.page.pageSize,
-              totalCount: mockDatas.length,
-            },
             data: data,
+            totalCount: mockDatas.length,
           },
         }
       };
@@ -58,10 +56,10 @@ export const AppService = {
       // setTimeout(reject, 500, 'Promise Fail');
     }),
   query: (request: string) =>
-    new Promise<AppResponseDto<CommonOutputDto<AppMockData>>>((resolve, reject) => {
+    new Promise<AppResponseModel<CommonOutputModel<AppQueryOutputModel>>>((resolve, reject) => {
       console.log(request);
       let data = mockDatas.find((p) => p.row === request);
-      let response: AppResponseDto<CommonOutputDto<AppMockData>> = {
+      let response: AppResponseModel<CommonOutputModel<AppQueryOutputModel>> = {
         data: {
           success: !!data,
           message: !!data ? 'Success' : 'Fail',
@@ -71,12 +69,12 @@ export const AppService = {
       setTimeout(resolve, 500, response);
       // setTimeout(reject, 500, 'Promise Fail');
     }),
-  create: (request: AppMockData) =>
-    new Promise<AppResponseDto<CommonOutputDto<AppMockData>>>((resolve, reject) => {
+  create: (request: AppModel) =>
+    new Promise<AppResponseModel<CommonOutputModel<AppQueryOutputModel>>>((resolve, reject) => {
       console.log(request);
-      let data: AppMockData = { ...request, row: createRow() };
+      let data: AppModel = { ...request, row: createRow() };
       mockDatas.push(data);
-      let response: AppResponseDto<CommonOutputDto<AppMockData>> = {
+      let response: AppResponseModel<CommonOutputModel<AppQueryOutputModel>> = {
         data: {
           success: true,
           message: 'Success',
@@ -86,14 +84,14 @@ export const AppService = {
       setTimeout(resolve, 500, response);
       // setTimeout(reject, 500, 'Promise Fail');
     }),
-  modify: (request: AppMockData) =>
-    new Promise<AppResponseDto<CommonOutputDto<AppMockData>>>((resolve, reject) => {
+  modify: (request: AppModel) =>
+    new Promise<AppResponseModel<CommonOutputModel<AppQueryOutputModel>>>((resolve, reject) => {
       console.log(request);
       let data = mockDatas.find((o) => o.row === request.row);
       if (data) {
         mockDatas.splice(mockDatas.indexOf(data), 1, request);
       }
-      let response: AppResponseDto<CommonOutputDto<AppMockData>> = {
+      let response: AppResponseModel<CommonOutputModel<AppQueryOutputModel>> = {
         data: {
           success: !!data,
           message: !!data ? 'Success' : 'Fail',
@@ -104,7 +102,7 @@ export const AppService = {
       // setTimeout(reject, 500, 'Promise Fail');
     }),
   remove: (request: string[]) =>
-    new Promise<AppResponseDto<CommonOutputDto<AppMockData>>>((resolve, reject) => {
+    new Promise<AppResponseModel<CommonOutputModel<string>>>((resolve, reject) => {
       console.log(request);
       request.forEach((v) => {
         let data = mockDatas.find((o) => o.row === v);
@@ -112,7 +110,7 @@ export const AppService = {
           mockDatas.splice(mockDatas.indexOf(data), 1);
         }
       });
-      let response: AppResponseDto<CommonOutputDto<string>> = {
+      let response: AppResponseModel<CommonOutputModel<string>> = {
         data: {
           success: true,
           message: 'Success',

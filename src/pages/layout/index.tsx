@@ -18,13 +18,13 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import { useState } from 'react';
 import { MeLayoutToolbar } from './style';
 import { ErrorBoundaryComponent } from '../../components/error-boundary';
-import { ROUTE_HOME, ROUTE_LOGIN } from '../../routes/path';
-import { ROUTE_APP01 } from '../../routes/app01/path';
-import { ROUTE_APP02 } from '../../routes/app02/path';
-import { MenuItemModel } from './model';
+import { ROUTE } from '../../routes/route';
+import { ROUTE_APP01 } from '../../routes/app01/route';
+import { ROUTE_APP02 } from '../../routes/app02/route';
+import { LayoutMenuItemOutputState } from './state';
 import { flushSync } from 'react-dom';
 
-const DefaultMenuItems: MenuItemModel[] = [
+const DefaultMenuItems: LayoutMenuItemOutputState[] = [
   // first
   {
     id: '1',
@@ -111,8 +111,8 @@ const DefaultMenuItems: MenuItemModel[] = [
 export function LayoutPage() {
   const navigate = useNavigate();
   const [state, setState] = useState<boolean>(false);
-  const [menuItems, setMenuItems] = useState<MenuItemModel[]>(DefaultMenuItems.filter((p) => p.parentId === ''));
-  const [currentMenuItem, setCurrentMenuItem] = useState<MenuItemModel>();
+  const [menuItems, setMenuItems] = useState<LayoutMenuItemOutputState[]>(DefaultMenuItems.filter((p) => p.parentId === ''));
+  const [currentMenuItem, setCurrentMenuItem] = useState<LayoutMenuItemOutputState>();
   const onClickMenuBack = () => {
     if (currentMenuItem && currentMenuItem.parentId) {
       let item = DefaultMenuItems.find((p) => p.id === currentMenuItem.parentId);
@@ -130,7 +130,7 @@ export function LayoutPage() {
       setMenuItems([ ...DefaultMenuItems.filter((p) => p.parentId === '') ]);
     }
   };
-  const onClickMenuClick = (item: MenuItemModel) => {
+  const onClickMenuClick = (item: LayoutMenuItemOutputState) => {
     if (item.path) {
       // console.log(item);
       navigate(item.path);
@@ -152,7 +152,7 @@ export function LayoutPage() {
         <IconButton onClick={() => setState(true)}>
           <MenuIcon />
         </IconButton>
-        <Button variant="contained" onClick={() => navigate(ROUTE_LOGIN)}>
+        <Button variant="contained" onClick={() => navigate(ROUTE.LOGIN)}>
           Quit
         </Button>
       </MeLayoutToolbar>
@@ -167,7 +167,7 @@ export function LayoutPage() {
             <ListItem disablePadding>
               <HomeOutlinedIcon></HomeOutlinedIcon>
               <ListItemButton onClick={() => {
-                  navigate(ROUTE_HOME);
+                  navigate(ROUTE.HOME);
                   setState(false);
                 }}>
                 <ListItemText primary={'Home'} />

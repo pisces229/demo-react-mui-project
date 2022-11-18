@@ -1,11 +1,11 @@
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router';
-import { ROUTE_HOME } from '../../routes/path';
+import { ROUTE } from '../../routes/route';
 
 export function LoginPage() {
   const navigate = useNavigate();
   const onClickEntry = () => {
-    navigate(ROUTE_HOME);
+    navigate(ROUTE.HOME);
   };
   return (
     <>

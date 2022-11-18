@@ -1,8 +1,8 @@
 import { Button, Grid } from "@mui/material";
 import { useContext } from "react";
 import { useNavigate } from "react-router";
-import { ROUTE_APP02 } from "../../../routes/app02/path";
-import { ROUTE_HOME } from "../../../routes/path";
+import { ROUTE_APP02 } from "../../../routes/app02/route";
+import { ROUTE } from "../../../routes/route";
 import { PageContext } from "./context";
 
 export function PageForm() {
@@ -19,7 +19,7 @@ export function PageForm() {
         break;
       }
       default: {
-        navigate(ROUTE_HOME);
+        navigate(ROUTE.HOME);
         break;
       }
     }
