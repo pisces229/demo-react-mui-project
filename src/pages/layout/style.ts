@@ -17,7 +17,7 @@ import { styled, Toolbar } from '@mui/material';
 //   },
 // });
 // styled
-export const MeLayoutToolbar = styled(Toolbar)({
+export const ScopeToolbar = styled(Toolbar)({
   '&.MuiToolbar-root': {
     padding: '0px',
   },

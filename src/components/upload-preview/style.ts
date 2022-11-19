@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 
-export const Wrapper = styled('div')({
+export const ScopeWrapper = styled('div')({
   display: 'flex',
   flexDirection: 'column',
   background: '#ffffff',
@@ -8,11 +8,11 @@ export const Wrapper = styled('div')({
   border: '1px solid #dee2e6',
   borderRadius: '6px',
 });
-export const ItemWrapper = styled('div')({
+export const ScopeItemWrapper = styled('div')({
   display: 'flex',
   flexDirection: 'row',
 });
-export const ItemName = styled('div')({
+export const ScopeItemName = styled('div')({
   width: '75%',
   fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
   fontWeight: '400',
@@ -21,7 +21,7 @@ export const ItemName = styled('div')({
   padding: '0.5rem',
   margin: 'auto',
 });
-export const ItemSize = styled('div')({
+export const ScopeItemSize = styled('div')({
   width: '25%',
   fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
   fontweight: '400',

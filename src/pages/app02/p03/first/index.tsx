@@ -1,8 +1,8 @@
-import { MeH2 } from "./style";
+import { ScopeH2 } from "./style";
 
 export function First() {
 
   return (
-    <MeH2>First</MeH2>
+    <ScopeH2>First</ScopeH2>
   );
 }

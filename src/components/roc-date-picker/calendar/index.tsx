@@ -1,16 +1,16 @@
 import {
-  CalendarWrapper,
-  CalendarTop,
-  YearMonthChange,
-  YearMonthSelect,
-  PickerWrapper,
-  WeekWrapper,
-  WeekItem,
-  DateWrapper,
-  DateDefaultItem,
-  DateCurrentItem,
-  DateOtherItem,
-  DateSpaceItem,
+  ScopeCalendarWrapper,
+  ScopeCalendarTop,
+  ScopeYearMonthChange,
+  ScopeYearMonthSelect,
+  ScopePickerWrapper,
+  ScopeWeekWrapper,
+  ScopeWeekItem,
+  ScopeDateWrapper,
+  ScopeDateDefaultItem,
+  ScopeDateCurrentItem,
+  ScopeDateOtherItem,
+  ScopeDateSpaceItem,
  } from "./style";
  import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -100,23 +100,23 @@ export function Calendar(props: {
       <>
         {
           value.toDateString() === currentDate.toDateString() &&
-          <DateCurrentItem tabIndex={0} onClick={onClickDateItem(value)}>
+          <ScopeDateCurrentItem tabIndex={0} onClick={onClickDateItem(value)}>
             {value.getDate()}
-          </DateCurrentItem>
+          </ScopeDateCurrentItem>
         }
         {
           value.toDateString() !== currentDate.toDateString() &&
           (value.getFullYear() === pickerYear && value.getMonth() === pickerMonth) &&
-          <DateDefaultItem onClick={onClickDateItem(value)}>
+          <ScopeDateDefaultItem onClick={onClickDateItem(value)}>
             {value.getDate()}
-          </DateDefaultItem>
+          </ScopeDateDefaultItem>
         }
         {
           value.toDateString() !== currentDate.toDateString() &&
           !(value.getFullYear() === pickerYear && value.getMonth() === pickerMonth) &&
-          <DateOtherItem onClick={onClickDateItem(value)}>
+          <ScopeDateOtherItem onClick={onClickDateItem(value)}>
             {value.getDate()}
-          </DateOtherItem>
+          </ScopeDateOtherItem>
         }
       </>
     );
@@ -160,15 +160,15 @@ export function Calendar(props: {
     }
   };
   return (
-    <CalendarWrapper>
-      <CalendarTop>
-        <YearMonthChange tabIndex={0}
+    <ScopeCalendarWrapper>
+      <ScopeCalendarTop>
+        <ScopeYearMonthChange tabIndex={0}
           onClick={onClickYearMonthChange(-1)}
           onKeyDown={onKeyboardYearMonthChange(-1)}
         >
           <NavigateBeforeIcon />
-        </YearMonthChange>
-        <YearMonthSelect tabIndex={0} value={pickerYear}
+        </ScopeYearMonthChange>
+        <ScopeYearMonthSelect tabIndex={0} value={pickerYear}
           onChange={(e) => setPickerYear(Number(e.target.value))}
           onKeyDown={onKeyboardYearMonthSelect}
         >
@@ -177,8 +177,8 @@ export function Calendar(props: {
               {item.text}
             </option>
           ))}
-        </YearMonthSelect>
-        <YearMonthSelect tabIndex={0} value={pickerMonth}
+        </ScopeYearMonthSelect>
+        <ScopeYearMonthSelect tabIndex={0} value={pickerMonth}
           onChange={(e) => setPickerMonth(Number(e.target.value))}
           onKeyDown={onKeyboardYearMonthSelect}
         >
@@ -187,35 +187,37 @@ export function Calendar(props: {
               {item.text}
             </option>
           ))}
-        </YearMonthSelect>
-        <YearMonthChange tabIndex={0}
+        </ScopeYearMonthSelect>
+        <ScopeYearMonthChange tabIndex={0}
           onClick={onClickYearMonthChange(1)}
           onKeyDown={onKeyboardYearMonthChange(1)}
         >
           <NavigateNextIcon />
-        </YearMonthChange>
-      </CalendarTop>
-      <PickerWrapper>
-        <WeekWrapper>
+        </ScopeYearMonthChange>
+      </ScopeCalendarTop>
+      <ScopePickerWrapper>
+        <ScopeWeekWrapper>
           {WeekTitleItems.map((item, index) => (
-            <WeekItem key={index}>{item}</WeekItem>
+            <ScopeWeekItem key={index}>{item}</ScopeWeekItem>
           ))}
-        </WeekWrapper>
+        </ScopeWeekWrapper>
         {dateItems.map((items, index) => (
-          <DateWrapper key={index}>
+          <ScopeDateWrapper key={index}>
             {items.map((item, index) => (
               <Fragment key={index}>
                 {renderDateItem(item)}
               </Fragment>
             ))}
-          </DateWrapper>
+          </ScopeDateWrapper>
         ))}
         {
           spaceItems.map((_, index) => (
-            <DateWrapper key={index}><DateSpaceItem>&nbsp;</DateSpaceItem></DateWrapper>
+            <ScopeDateWrapper key={index}>
+              <ScopeDateSpaceItem>&nbsp;</ScopeDateSpaceItem>
+            </ScopeDateWrapper>
           ))
         }
-      </PickerWrapper>
-    </CalendarWrapper>
+      </ScopePickerWrapper>
+    </ScopeCalendarWrapper>
   );
 }

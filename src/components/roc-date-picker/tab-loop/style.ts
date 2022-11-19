@@ -1,14 +1,14 @@
 import { styled } from '@mui/material';
 
-export const MeTabLoopWrapper = styled('div')({
+export const ScopeTabLoopWrapper = styled('div')({
   display: 'block',
   flexDirection: 'row',
 });
-export const MeTabLoopStart = styled('div')({
+export const ScopeTabLoopStart = styled('div')({
   display: 'block',
   flexDirection: 'row',
 });
-export const MeTabLoopEnd = styled('div')({
+export const ScopeTabLoopEnd = styled('div')({
   display: 'block',
   flexDirection: 'row',
 });

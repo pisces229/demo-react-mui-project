@@ -1,4 +1,4 @@
-import { MeIcon } from "./style";
+import { ScopeIcon } from "./style";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Box, ClickAwayListener, Popper, TextField } from "@mui/material";
 import { TabLoopComponent } from "./tab-loop";
@@ -72,9 +72,9 @@ const Component = (props: {
             onKeyDown={onKeyDown}
             InputProps={{
               endAdornment: (
-                <MeIcon onClick={onClickIcon}>
+                <ScopeIcon onClick={onClickIcon}>
                   <CalendarMonthIcon sx={{ opacity: 0.6 }} />
-                </MeIcon>
+                </ScopeIcon>
               ),
             }}
             />

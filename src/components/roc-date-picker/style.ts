@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 
-export const MeIcon = styled('i')({
+export const ScopeIcon = styled('i')({
   position: 'relative',
   top: '2px',
   cursor: 'pointer',

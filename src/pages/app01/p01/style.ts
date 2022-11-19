@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
 
-export const MeLabel = styled('label')({
+export const Scope = styled('label')({
   color: 'Green',
 });

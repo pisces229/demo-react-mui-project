@@ -16,7 +16,7 @@ import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import { useState } from 'react';
-import { MeLayoutToolbar } from './style';
+import { ScopeToolbar } from './style';
 import { ErrorBoundaryComponent } from '../../components/error-boundary';
 import { ROUTE } from '../../routes/route';
 import { ROUTE_APP01 } from '../../routes/app01/route';
@@ -81,7 +81,7 @@ const DefaultMenuItems: LayoutMenuItemOutputState[] = [
     text: 'APP02P04',
     path: ROUTE_APP02.P04,
   },
-  // second
+  // third
   {
     id: '201',
     parentId: '20',
@@ -148,14 +148,14 @@ export function LayoutPage() {
   return (
     <>
       <h2>Default Layout</h2>
-      <MeLayoutToolbar>
+      <ScopeToolbar>
         <IconButton onClick={() => setState(true)}>
           <MenuIcon />
         </IconButton>
         <Button variant="contained" onClick={() => navigate(ROUTE.LOGIN)}>
           Quit
         </Button>
-      </MeLayoutToolbar>
+      </ScopeToolbar>
       <Drawer anchor={'left'} open={state} onClose={() => setState(false)}>
         <Box
           sx={{ minWidth: 250 }}

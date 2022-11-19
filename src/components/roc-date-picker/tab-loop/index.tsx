@@ -1,5 +1,9 @@
 import { useRef } from "react";
-import { MeTabLoopWrapper, MeTabLoopStart, MeTabLoopEnd } from "./style";
+import {
+  ScopeTabLoopWrapper,
+  ScopeTabLoopStart,
+  ScopeTabLoopEnd,
+} from "./style";
 
 export const TabLoopComponent = (props: { children: JSX.Element }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -16,11 +20,11 @@ export const TabLoopComponent = (props: { children: JSX.Element }) => {
   };
   return (
     <>
-      <MeTabLoopWrapper ref={wrapperRef}>
-        <MeTabLoopStart tabIndex={0} onFocus={onFocusStart} />
+      <ScopeTabLoopWrapper ref={wrapperRef}>
+        <ScopeTabLoopStart tabIndex={0} onFocus={onFocusStart}></ScopeTabLoopStart>
           {props.children}
-        <MeTabLoopEnd tabIndex={0} onFocus={onFocusEnd} />
-      </MeTabLoopWrapper>
+        <ScopeTabLoopEnd tabIndex={0} onFocus={onFocusEnd}></ScopeTabLoopEnd>
+      </ScopeTabLoopWrapper>
     </>
   );
 }

@@ -128,6 +128,7 @@ export function App01P01Page() {
           </TableRow>
         </TableBody>
       </Table>
+
       {gridTotalCount &&
       <>
         <Grid container direction="row" justifyContent="left" alignItems="center">

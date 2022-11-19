@@ -1,19 +1,23 @@
 import { Fragment } from "react";
-import { Wrapper, ItemWrapper, ItemName, ItemSize } from "./style";
+import { ScopeWrapper, ScopeItemWrapper, ScopeItemName, ScopeItemSize } from "./style";
 
 const Component = (prop: { files: File[] }) => {
   const calculate = (size: number) => (size / 1024).toFixed(3);
   return (
-    <Wrapper>
-      {prop.files.map((item, index) => (
-        <Fragment key={index}>
-          <ItemWrapper>
-            <ItemName>{item.name}</ItemName>
-            <ItemSize>{calculate(item.size)}{' KB'}</ItemSize>
-          </ItemWrapper>
-        </Fragment>
-      ))}
-    </Wrapper>
+    <>
+      {prop.files && !!prop.files.length &&
+      <ScopeWrapper>
+        {prop.files.map((item, index) => (
+          <Fragment key={index}>
+            <ScopeItemWrapper>
+              <ScopeItemName>{item.name}</ScopeItemName>
+              <ScopeItemSize>{calculate(item.size)}{' KB'}</ScopeItemSize>
+            </ScopeItemWrapper>
+          </Fragment>
+        ))}
+      </ScopeWrapper>}
+    </>
+
   )
 }
 

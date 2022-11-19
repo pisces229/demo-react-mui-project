@@ -1,21 +1,21 @@
 import { styled } from '@mui/material';
 
-export const CalendarWrapper = styled('div')({
+export const ScopeCalendarWrapper = styled('div')({
   margin: 'auto',
   width: '12.75rem',
 });
 
-export const CalendarTop = styled('div')({
+export const ScopeCalendarTop = styled('div')({
   margin: 'auto',
   display: 'flex',
   justifyContent: 'space-between',
 });
-export const YearMonthSelect = styled('select')({
+export const ScopeYearMonthSelect = styled('select')({
   fontSize: '0.875rem',
   borderRadius: '0.2rem',
   cursor: 'pointer',
 });
-export const YearMonthChange = styled('div')({
+export const ScopeYearMonthChange = styled('div')({
   fontSize: '0.875rem',
   textAlign: 'center',
   cursor: 'pointer',
@@ -26,16 +26,16 @@ export const YearMonthChange = styled('div')({
   },
 });
 
-export const PickerWrapper = styled('div')({
+export const ScopePickerWrapper = styled('div')({
   margin: 'auto',
   height: '12.125rem',
 });
-export const WeekWrapper = styled('div')({
+export const ScopeWeekWrapper = styled('div')({
   margin: 'auto',
   display: 'flex',
   justifyContent: 'space-between',
 });
-export const WeekItem = styled('div')({
+export const ScopeWeekItem = styled('div')({
   width: '1rem',
   height: '1.125rem',
   fontSize: '0.875rem',
@@ -49,13 +49,13 @@ export const WeekItem = styled('div')({
   cursor: 'default',
 });
 
-export const DateWrapper = styled('div')({
+export const ScopeDateWrapper = styled('div')({
   margin: 'auto',
   display: 'flex',
   justifyContent: 'space-between',
 });
 
-export const DateDefaultItem = styled('div')({
+export const ScopeDateDefaultItem = styled('div')({
   width: '1rem',
   height: '1.125rem',
   fontSize: '0.875rem',
@@ -72,7 +72,7 @@ export const DateDefaultItem = styled('div')({
     opacity: '1',
   }
 });
-export const DateCurrentItem = styled(DateDefaultItem)(({ theme }) => ({
+export const ScopeDateCurrentItem = styled(ScopeDateDefaultItem)(({ theme }) => ({
   borderRadius: '50%',
   color: 'White',
   backgroundColor: 'DodgerBlue',
@@ -80,10 +80,10 @@ export const DateCurrentItem = styled(DateDefaultItem)(({ theme }) => ({
     backgroundColor: 'DodgerBlue',
   }
 }));
-export const DateOtherItem = styled(DateDefaultItem)(({ theme }) => ({
+export const ScopeDateOtherItem = styled(ScopeDateDefaultItem)(({ theme }) => ({
   opacity: '0.4',
 }));
-export const DateSpaceItem = styled('div')({
+export const ScopeDateSpaceItem = styled('div')({
   width: '1rem',
   height: '1.125rem',
   fontSize: '0.875rem',

@@ -23,11 +23,11 @@ export const App01Route = () => {
     },
   ];
   const element = useRoutes(routeObject);
-  const isAllowable = useRouteGuard('APP01');
+  const routeGuardState = useRouteGuard('APP01');
   return (
     <>
-      {isAllowable && element}
-      {!isAllowable && <h3>Forbidden</h3>}
+      {routeGuardState === 1 && element}
+      {routeGuardState === 2 && <h3>Forbidden</h3>}
     </>
   );
 }

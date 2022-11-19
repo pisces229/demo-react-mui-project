@@ -1,7 +1,6 @@
-import './App.scss';
 import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import globalTheme from './theme';
+import globalTheme from './styles/theme';
 import { BrowserRouter } from 'react-router-dom';
 import { MessageComponent } from './components/message';
 import { ProgressComponent } from './components/progress';

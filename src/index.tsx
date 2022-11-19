@@ -1,8 +1,6 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './App';
 import CONFIG from './config';
-import './index.scss';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
@@ -13,12 +11,6 @@ console.log(CONFIG.ENVIRONMENT);
 console.log(CONFIG.ENDPOINT);
 
 root.render(<App />);
-
-// root.render(
-//   <React.StrictMode>
-//     <App />
-//   </React.StrictMode>
-// );
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
