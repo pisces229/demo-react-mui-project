@@ -40,6 +40,10 @@ node-sass
 
 `npm install --save-dev node-sass`
 
+[TanStack](https://tanstack.com/)
+
+`npm install --save @tanstack/react-query`
+
 [immer](https://immerjs.github.io/immer/)
 
 `npm install --save immer`
