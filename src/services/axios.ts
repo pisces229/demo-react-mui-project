@@ -1,10 +1,11 @@
+import { DefaultService } from './default/index';
 import axios from 'axios';
 import CONFIG from '../config';
 import { useAuthStore } from '../stores/auth';
 
 // default
 const defaultAxios = axios.create({
-  baseURL: CONFIG.ENDPOINT,
+  baseURL: `${CONFIG.ENDPOINT}/api`,
   headers: {
     'Cache-Control': 'no-cache',
     'Content-Type': 'application/json',
@@ -50,7 +51,7 @@ const refresh: Refresh = {
   },
 };
 const authenticateAxios = axios.create({
-  baseURL: CONFIG.ENDPOINT,
+  baseURL: `${CONFIG.ENDPOINT}/api`,
   headers: {
     'Cache-Control': 'no-cache',
     'Content-Type': 'application/json',
@@ -60,8 +61,7 @@ authenticateAxios.interceptors.request.use(
   (config) => {
     config.headers = {
       ...config.headers,
-      // Authorization: `Bearer ${useAuthStore.getState().token}`,
-      Token: `${useAuthStore.getState().token}`,
+      Authorization: `Bearer ${useAuthStore.getState().token}`,
     };
     return config;
   },
@@ -92,6 +92,10 @@ authenticateAxios.interceptors.response.use(
         console.log(error);
         return Promise.reject(error);
       }
+    } else if (error.response.status === 403) {
+      console.log(error);
+      useAuthStore.setState({ token: '' });
+      return Promise.reject(error);
     } else {
       console.log(error);
       return Promise.reject(error);
@@ -99,12 +103,18 @@ authenticateAxios.interceptors.response.use(
   },
 );
 const doRefresh = () => {
-  authenticateAxios.post(
-    '/refresh',
-    JSON.stringify(useAuthStore.getState().token),
-  )
-    .then((value) => useAuthStore.setState({ token: value.data }))
-    .catch((error) => useAuthStore.setState({ token: '' }))
+  DefaultService.refresh(useAuthStore.getState().token)
+    .then((response) => {
+      if (response.data.success) {
+        useAuthStore.setState({ token: response.data.data })
+      } else {
+        useAuthStore.setState({ token: '' });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      useAuthStore.setState({ token: '' });
+    })
     .finally(() => refresh.run());
 };
 export { defaultAxios, authenticateAxios };

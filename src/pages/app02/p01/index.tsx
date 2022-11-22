@@ -16,12 +16,13 @@ export function App02P01Page() {
     app02P04ActionStore.setAction(App02P04Action.Run);
     navigate(ROUTE_APP02.P04);
   };
+
   const onClickSignIn = async () => {
-    await DefaultService.signIn({ Account: 'Account', Password: 'Password' })
+    await DefaultService.signIn({ account: 'Account', password: 'Password' })
       .then((response) => {
         console.log(response);
         if (response.status === 200) {
-          authStore.setToken(response.data.toString());
+          authStore.setToken(response.data.data);
         }
       })
       .catch((error) => console.log(error))
@@ -62,32 +63,32 @@ export function App02P01Page() {
       .catch((error) => console.log(error))
       .finally(() => console.log(`DefaultService.signOut.finally`));
   };
-  const onClickFree = async () => {
-    await DefaultService.free()
+
+  const onClickValueHttpGet = () => {
+    DefaultService.valueHttpGet('[Test]')
       .then((response) => console.log(response))
       .catch((error) => console.log(error))
-      .finally(() => console.log(`DefaultService.free.finally`));
+      .finally(() => console.log(`DefaultService.valueHttpGet.finally`));
   };
-  const onClickAuth = async () => {
-    await DefaultService.auth()
+  const onClickValueHttpPost = () => {
+    DefaultService.valueHttpPost('[Test]')
       .then((response) => console.log(response))
       .catch((error) => console.log(error))
-      .finally(() => console.log(`DefaultService.auth.finally`));
+      .finally(() => console.log(`DefaultService.valueHttpPost.finally`));
   };
-  const onClickMultipleAuth = () => {
-    DefaultService.auth()
-      .then((response) => console.log('1.then', response))
-      .catch((error) => console.log('1.catch', error))
-      .finally(() => console.log(`1.finally`));
-    DefaultService.auth()
-      .then((response) => console.log('2.then', response))
-      .catch((error) => console.log('2.catch', error))
-      .finally(() => console.log(`2.finally`));
-    DefaultService.auth()
-      .then((response) => console.log('3.then', response))
-      .catch((error) => console.log('3.catch', error))
-      .finally(() => console.log(`3.finally`));
+  const onClickJsonHttpGet = () => {
+    DefaultService.jsonHttpGet({ text: '[Test]', value: 9, date: new Date() })
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error))
+      .finally(() => console.log(`DefaultService.valueHttpGet.finally`));
   };
+  const onClickJsonHttpPost = () => {
+    DefaultService.jsonHttpPost({ text: '[Test]', value: 9, date: new Date() })
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error))
+      .finally(() => console.log(`DefaultService.ValueHttpPost.finally`));
+  };
+
   const onClickDownload = async () => {
     DefaultService.download()
       .then((response) => FileUtil.download(response))
@@ -99,10 +100,45 @@ export function App02P01Page() {
     let formData = new FormData();
     let file = new File(['a', 'b', 'c'], 'upload');
     formData.append('file', file);
+    formData.append('name', 'upload');
     DefaultService.upload(formData)
       .then((response) => console.log(response))
       .catch((error) => console.log(error))
       .finally(() => console.log(`DefaultService.download.finally`));
+  };
+
+  const onClickCommonPagedQuery = () => {
+    DefaultService.commonPagedQuery({
+      page: { pageNo: 1, pageSize: 10 },
+      data: { text: '[Test]', value: 9, date: new Date() }
+    })
+    .then((response) => console.log(response))
+    .catch((error) => console.log(error))
+    .finally(() => console.log(`DefaultService.commonPagedQuery.finally`));
+  };
+  const onClickMultiple = () => {
+    DefaultService.jsonHttpPost({ text: '[Test]', value: 9, date: new Date() })
+      .then((response) => console.log('1.then', response))
+      .catch((error) => console.log('1.catch', error))
+      .finally(() => console.log(`1.finally`));
+    DefaultService.jsonHttpPost({ text: '[Test]', value: 9, date: new Date() })
+      .then((response) => console.log('2.then', response))
+      .catch((error) => console.log('2.catch', error))
+      .finally(() => console.log(`2.finally`));
+    DefaultService.jsonHttpPost({ text: '[Test]', value: 9, date: new Date() })
+      .then((response) => console.log('3.then', response))
+      .catch((error) => console.log('3.catch', error))
+      .finally(() => console.log(`3.finally`));
+  };
+  const onClickMultipleAll = () => {
+    Promise.all([
+      DefaultService.jsonHttpPost({ text: '[Test]', value: 9, date: new Date() }),
+      DefaultService.jsonHttpPost({ text: '[Test]', value: 9, date: new Date() }),
+      DefaultService.jsonHttpPost({ text: '[Test]', value: 9, date: new Date() }),
+    ])
+    .then((response) => console.log('then', response))
+    .catch((error) => console.log('catch', error))
+    .finally(() => console.log(`finally`));
   };
   return (
     <>
@@ -128,17 +164,25 @@ export function App02P01Page() {
         columns={1}
       >
         <Grid item xs={1}>
-          <Button variant="contained" onClick={onClickSignIn}>SignIn</Button>
-          <Button variant="contained" onClick={onClickValidate}>Validate</Button>
-          <Button variant="contained" onClick={onClickRefresh}>Refresh</Button>
-          <Button variant="contained" onClick={onClickSignOut}>SignOut</Button>
+          <Button variant="contained" onClick={onClickSignIn}>Sign In</Button>&nbsp;
+          <Button variant="contained" onClick={onClickValidate}>Validate</Button>&nbsp;
+          <Button variant="contained" onClick={onClickRefresh}>Refresh</Button>&nbsp;
+          <Button variant="contained" onClick={onClickSignOut}>Sign Out</Button>&nbsp;
         </Grid>
         <Grid item xs={1}>
-          <Button variant="contained" onClick={onClickFree}>Free</Button>
-          <Button variant="contained" onClick={onClickAuth}>Auth</Button>
-          <Button variant="contained" onClick={onClickMultipleAuth}>MultipleAuth</Button>
-          <Button variant="contained" onClick={onClickDownload}>Download</Button>
-          <Button variant="contained" onClick={onClickUpload}>Upload</Button>
+          <Button variant="contained" onClick={onClickValueHttpGet}>Value Get</Button>&nbsp;
+          <Button variant="contained" onClick={onClickValueHttpPost}>Value Post</Button>&nbsp;
+          <Button variant="contained" onClick={onClickJsonHttpGet}>Json Get</Button>&nbsp;
+          <Button variant="contained" onClick={onClickJsonHttpPost}>Json Post</Button>&nbsp;
+        </Grid>
+        <Grid item xs={1}>
+          <Button variant="contained" onClick={onClickDownload}>Download</Button>&nbsp;
+          <Button variant="contained" onClick={onClickUpload}>Upload</Button>&nbsp;
+        </Grid>
+        <Grid item xs={1}>
+          <Button variant="contained" onClick={onClickCommonPagedQuery}>Paged Query</Button>&nbsp;
+          <Button variant="contained" onClick={onClickMultiple}>Multiple</Button>&nbsp;
+          <Button variant="contained" onClick={onClickMultipleAll}>Multiple All</Button>&nbsp;
         </Grid>
       </Grid>
     </>

@@ -17,7 +17,7 @@ switch (process.env.REACT_APP_ENV) {
   }
   default: {
     CONFIG.ENVIRONMENT = 'DEVELOPMENT';
-    CONFIG.ENDPOINT = 'https://localhost:9100';
+    CONFIG.ENDPOINT = 'https://localhost:9110';
   }
 }
 

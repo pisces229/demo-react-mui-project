@@ -129,7 +129,8 @@ export function App01P01Page() {
         </TableBody>
       </Table>
 
-      {gridTotalCount &&
+      {gridTotalCount === 0 && <h3>No Data</h3>}
+      {!!gridTotalCount &&
       <>
         <Grid container direction="row" justifyContent="left" alignItems="center">
           <Grid item>
