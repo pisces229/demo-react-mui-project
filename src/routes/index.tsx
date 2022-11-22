@@ -14,7 +14,7 @@ const App02Route = lazy(() =>
   })),
 );
 
-export function RootRoute() {
+export const RootRoute = () =>  {
   let routeObject: RouteObject[] = [
     {
       index: true,

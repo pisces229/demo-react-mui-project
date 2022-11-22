@@ -7,7 +7,7 @@ import { useApp02P04ActionStore } from "../../../stores/page/app02/p04";
 import { App02P04Action } from "../../../stores/page/app02/p04/state";
 import { FileUtil } from "../../../utils/file";
 
-export function App02P01Page() {
+export const App02P01Page = () => {
   const navigate = useNavigate();
   const app02P04ActionStore = useApp02P04ActionStore();
   const authStore = useAuthStore();
@@ -142,7 +142,7 @@ export function App02P01Page() {
   };
   return (
     <>
-      <h2>Components</h2>
+      <h3>Axios</h3>
       <Grid
         container
         direction="row"

@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ROUTE } from '../../routes/route';
 import { FormState, initialFormState } from './state';
+import { ScopeTableCellStyle } from './style';
 
-export function LoginPage() {
+export const LoginPage = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState<FormState>(initialFormState);
   const onClickSignIn = () => {
@@ -17,12 +18,12 @@ export function LoginPage() {
         <TableBody>
           <TableRow>
             <TableCell align="center" colSpan={2}>
-              <h2>Login Page</h2>
+              <h3>Login Page</h3>
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell align="right">Account</TableCell>
-            <TableCell>
+            <TableCell align="right" sx={{...ScopeTableCellStyle, width: '40%'}}>Account</TableCell>
+            <TableCell sx={ScopeTableCellStyle}>
               <TextField
                 type="text"
                 inputProps={{ maxLength: 10 }}

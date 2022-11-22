@@ -1,8 +1,8 @@
 
-export function HomePage() {
+export const HomePage = () => {
   return (
     <>
-      <h2>Home Page</h2>
+      <h3>Home Page</h3>
     </>
   );
 }

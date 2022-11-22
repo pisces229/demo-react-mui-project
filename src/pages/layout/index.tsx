@@ -108,7 +108,7 @@ const DefaultMenuItems: LayoutMenuItemOutputState[] = [
   },
 ];
 
-export function LayoutPage() {
+export const LayoutPage = () =>  {
   const navigate = useNavigate();
   const [state, setState] = useState<boolean>(false);
   const [menuItems, setMenuItems] = useState<LayoutMenuItemOutputState[]>(DefaultMenuItems.filter((p) => p.parentId === ''));
@@ -147,7 +147,7 @@ export function LayoutPage() {
   };
   return (
     <>
-      <h2>Default Layout</h2>
+      <h3>Default Layout</h3>
       <ScopeToolbar>
         <IconButton onClick={() => setState(true)}>
           <MenuIcon />

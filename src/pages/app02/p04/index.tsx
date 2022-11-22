@@ -6,7 +6,7 @@ import { App02P04Action } from "../../../stores/page/app02/p04/state";
 import { PageContext } from "./context";
 import { PageForm } from "./form";
 
-export function App02P04Page() {
+export const App02P04Page = () => {
   const navigate = useNavigate();
   const [display, setDisplay] = useState<boolean>(false);
   const [back, setBack] = useState<string>('');
@@ -31,7 +31,7 @@ export function App02P04Page() {
 
   return (
     <>
-      <h2>Back</h2>
+      <h3>Back</h3>
       {display &&
       <PageContext.Provider value={{
         back, setBack,

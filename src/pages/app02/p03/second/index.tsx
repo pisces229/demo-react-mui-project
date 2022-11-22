@@ -1,6 +1,6 @@
 import { ScopeH2 } from "./style";
 
-export function Second() {
+export const Second = () => {
   return (
     <ScopeH2>Second</ScopeH2>
   );

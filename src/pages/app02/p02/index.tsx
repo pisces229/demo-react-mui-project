@@ -1,4 +1,4 @@
-import { Autocomplete, AutocompleteChangeDetails, AutocompleteChangeReason, Box, Button, Checkbox, Grid, MenuItem, Radio, Select, Switch, Tab, Table, TableBody, TableCell, TableRow, Tabs, TextField, TextFieldProps, Typography } from '@mui/material';
+import { Autocomplete, AutocompleteChangeDetails, AutocompleteChangeReason, Box, Button, Checkbox, Grid, MenuItem, Modal, Radio, Select, Switch, Tab, Table, TableBody, TableCell, TableRow, Tabs, TextField, TextFieldProps, Typography } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
 import { Fragment, useEffect, useState } from 'react';
 import { FileUtil } from '../../../utils/file';
@@ -11,6 +11,8 @@ import { ROUTE_APP02 } from '../../../routes/app02/route';
 import { App02P04Action } from '../../../stores/page/app02/p04/state';
 import { RocDatePickerComponent } from '../../../components/roc-date-picker';
 import { UploadPreviewComponent } from '../../../components/upload-preview';
+import { commonOpenPageStyle } from '../../../styles';
+import { App02D01Page } from '../d01';
 
 const options: CommonOptionState[] = [
   { value: '1', text: 'A', disable: false },
@@ -18,11 +20,12 @@ const options: CommonOptionState[] = [
   { value: '3', text: 'C', disable: false },
 ];
 
-export function App02P02Page() {
+export const App02P02Page = () => {
   const navigate = useNavigate();
   const app02P04ActionStore = useApp02P04ActionStore();
   const [form, setForm] = useState<FormState>(initialFormState);
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState<number>(0);
+  const [open, setOpen] = useState<boolean>(false);
   useEffect(() => {
     console.log(form);
   }, [form]);
@@ -36,7 +39,7 @@ export function App02P02Page() {
   };
   return (
     <>
-      <h2>Axios</h2>
+      <h3>Components</h3>
       <Grid
         container
         direction="row"
@@ -44,6 +47,9 @@ export function App02P02Page() {
         alignItems="center"
       >
         <Grid item>
+          <Button variant="contained" onClick={() => setOpen(true)}>
+            Open Modal
+          </Button>
           <Button variant="contained" onClick={onClickGoToP04}>
             Go to P04
           </Button>
@@ -235,6 +241,17 @@ export function App02P02Page() {
           <Typography>Item Three</Typography>
         </Box>
       )}
+
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={commonOpenPageStyle}>
+          <App02D01Page onClose={() => setOpen(false)}></App02D01Page>
+        </Box>
+      </Modal>
     </>
   );
 }

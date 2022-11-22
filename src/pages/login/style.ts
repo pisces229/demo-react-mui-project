@@ -1,4 +1,7 @@
 import { styled } from '@mui/material';
 
-export const Scope = styled('a')({
-});
+export const ScopeTableCellStyle = {
+  width: '50%',
+  border: 0,
+  padding: 1,
+};

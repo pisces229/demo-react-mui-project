@@ -7,7 +7,7 @@ import { TextField, ThemeProvider } from '@mui/material';
 export function App02P03Page() {
   return (
     <>
-      <h2>Style</h2>
+      <h3>Style</h3>
       <ScopeH2>Index</ScopeH2>
       <First/>
       <Second/>

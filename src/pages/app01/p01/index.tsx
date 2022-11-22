@@ -14,7 +14,7 @@ import { App01P02Action } from "../../../stores/page/app01/p02/state";
 import { ROUTE_APP01 } from "../../../routes/app01/route";
 import { useMessageComponentStore } from "../../../stores/component/message";
 
-export function App01P01Page() {
+export const App01P01Page = () => {
   const navigate = useNavigate();
   const initialRef = useRef(false);
   const [action] = useState<App01P01Action>(useApp01P01ActionStore.getState().action);
@@ -94,7 +94,7 @@ export function App01P01Page() {
   };
   return (
     <>
-      <h2>App01P01Page</h2>
+      <h3>App01P01Page</h3>
       <Grid container direction="row" justifyContent="right" alignItems="center">
         <Grid item>
           <Button variant="contained" onClick={onClickCreate}>Create</Button>

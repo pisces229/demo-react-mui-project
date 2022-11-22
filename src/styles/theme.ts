@@ -5,6 +5,8 @@ export default createTheme({
     MuiButton: {
       defaultProps: {
         size: 'small',
+        sx: {
+        },
       },
       styleOverrides: {
       },
@@ -13,6 +15,8 @@ export default createTheme({
     MuiTextField: {
       defaultProps: {
         size: 'small',
+        sx: {
+        },
       },
       styleOverrides: {
       },
@@ -21,6 +25,8 @@ export default createTheme({
     MuiSelect: {
       defaultProps: {
         size: 'small',
+        sx: {
+        },
       },
       styleOverrides: {
       },
@@ -29,6 +35,8 @@ export default createTheme({
     MuiAutocomplete: {
       defaultProps: {
         size: 'small',
+        sx: {
+        },
       },
       styleOverrides: {
       },
@@ -37,6 +45,8 @@ export default createTheme({
     MuiSwitch: {
       defaultProps: {
         size: 'small',
+        sx: {
+        },
       },
       styleOverrides: {
       },
@@ -45,6 +55,8 @@ export default createTheme({
     MuiCheckbox: {
       defaultProps: {
         size: 'small',
+        sx: {
+        },
       },
       styleOverrides: {
       },
@@ -53,25 +65,32 @@ export default createTheme({
     MuiRadio: {
       defaultProps: {
         size: 'small',
+        sx: {
+        },
       },
       styleOverrides: {
       },
       variants: [],
     },
-  //   MuiAutocomplete: {
-  //     defaultProps: {
-  //       // disabled: true,
-  //     },
-  //     styleOverrides: {
-  //       inputRoot: {
-  //         padding: '0px',
-  //         background: 'lightblue',
-  //       },
-  //       // input: {
-  //       //   background: "lightblue",
-  //       // },
-  //     },
-  //     variants: [],
-  //   },
+    MuiTableBody: {
+      defaultProps: {
+        sx: {
+        },
+      },
+      styleOverrides: {
+      },
+      variants: [],
+    },
+    MuiTableCell: {
+      defaultProps: {
+        sx: {
+          border: 0,
+          padding: 1,
+        },
+      },
+      styleOverrides: {
+      },
+      variants: [],
+    },
   },
 });

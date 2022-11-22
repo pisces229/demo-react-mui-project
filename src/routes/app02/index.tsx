@@ -5,7 +5,7 @@ import { App02P02Page } from '../../pages/app02/p02';
 import { App02P03Page } from '../../pages/app02/p03';
 import { App02P04Page } from '../../pages/app02/p04';
 
-export function App02Route() {
+export const App02Route = () =>  {
   let routeObject: RouteObject[] = [
     {
       index: true,
