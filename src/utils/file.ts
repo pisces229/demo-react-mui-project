@@ -1,3 +1,4 @@
+import { CommonOutputModel } from './../services/model';
 import { AxiosResponse } from 'axios';
 import { saveAs } from 'file-saver';
 
@@ -16,7 +17,7 @@ const listToArray = (fileList: FileList | null) => {
 const download = async (response: AxiosResponse<Blob, any>) => {
   console.log(response.headers['content-type']);
   console.log(response);
-  if (response.headers['content-type'] !== 'text/plain; charset=utf-8') {
+  if (response.headers['content-type'] !== 'application/json; charset=utf-8') {
     const contentDispositionValues =
       response.headers['content-disposition']?.split(';');
     let filename = 'download';
@@ -37,10 +38,13 @@ const download = async (response: AxiosResponse<Blob, any>) => {
     // document.body.appendChild(a);
     // a.click();
     // document.body.removeChild(a);
-    return Promise.resolve('');
+    let value: CommonOutputModel<string> = { success: true, message: '', data: '' };
+    return Promise.resolve(value);
   } else {
-    console.log(response);
-    return Promise.resolve(response.data);
+    // console.log(response);
+    return response.data.text().then((value) => {
+      return JSON.parse(value);
+    });
   }
 };
 

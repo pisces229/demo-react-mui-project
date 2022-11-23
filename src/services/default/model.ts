@@ -22,3 +22,6 @@ export interface DefaultJsonOutputModel {
   value: number;
   date: Date;
 }
+export interface DefaultDownloadInputModel {
+  filename?: string;
+}

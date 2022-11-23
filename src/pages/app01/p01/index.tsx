@@ -35,12 +35,9 @@ export const App01P01Page = () => {
   const [gridTotalCount, setGridTotalCount] = useState<number>();
   const [grid, setGrid] = useState<GridState[]>([]);
 
-  const callbackQuery = useCallback((page: CommonPageState = gridPage) => {
+  const callbackQuery = useCallback((form: FormState, page: CommonPageState) => {
     useProgressComponentStore.getState().open();
-    AppService.queryGrid({
-      page: page,
-      data: form,
-    })
+    AppService.queryGrid({ data: form, page: page })
     .then((response) => {
       if (response.data.success) {
         setGridPage(page);
@@ -49,7 +46,7 @@ export const App01P01Page = () => {
       }
     })
     .finally(() => useProgressComponentStore.getState().close());
-  }, [form, gridPage]);
+  }, []);
 
   useEffect(() => {
     console.log('App01P01Page.initial');
@@ -62,27 +59,27 @@ export const App01P01Page = () => {
         }
         case App01P01Action.Query: {
           console.log('App01P01Action.Query');
-          callbackQuery();
+          callbackQuery(form, gridPage);
           break;
         }
       }
       useApp01P01ActionStore.getState().setAction();
     }
-  }, [action, callbackQuery, form, grid.length]);
+  }, [action, callbackQuery, form, gridPage]);
 
   const onClickCreate = async () => {
     useApp01P01ActionStore.getState().setQueryState({ ...form });
     useApp01P02ActionStore.getState().setAction(App01P02Action.Create);
     navigate(ROUTE_APP01.P02);
   };
-  const onClickQuery = () => callbackQuery();
+  const onClickQuery = () => callbackQuery(form, gridPage);
   const onClickClear = async () => setForm(initialFormState);
   const onClickGridRemove = async () => {
     useProgressComponentStore.getState().open();
     AppService.remove(grid.filter((o) => o.check).map((o) => o.row))
     .then((response) => {
       useMessageComponentStore.getState().success(response.data.message);
-      callbackQuery();
+      callbackQuery(form, gridPage);
     })
     .finally(() => useProgressComponentStore.getState().close());
   };
@@ -187,7 +184,7 @@ export const App01P01Page = () => {
             <Pagination siblingCount={2}
               count={PaginationUtil.pageCount(gridPage.pageSize, gridTotalCount)}
               page={gridPage.pageNo}
-              onChange={async (event, page) => callbackQuery({ ...gridPage, pageNo: page })}
+              onChange={async (event, page) => callbackQuery(form, { ...gridPage, pageNo: page })}
             />
           </Grid>
         </Grid>

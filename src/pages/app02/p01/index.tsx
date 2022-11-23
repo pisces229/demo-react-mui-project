@@ -2,6 +2,7 @@ import { Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router";
 import { ROUTE_APP02 } from "../../../routes/app02/route";
 import { DefaultService } from "../../../services/default";
+import { CommonOutputModel } from "../../../services/model";
 import { useAuthStore } from "../../../stores/auth";
 import { useApp02P04ActionStore } from "../../../stores/page/app02/p04";
 import { App02P04Action } from "../../../stores/page/app02/p04/state";
@@ -90,9 +91,14 @@ export const App02P01Page = () => {
   };
 
   const onClickDownload = async () => {
-    DefaultService.download()
+    DefaultService.download({ filename: 'test' })
       .then((response) => FileUtil.download(response))
-      .then((message) => console.log(message))
+      .then((value: CommonOutputModel<string>) => {
+        console.log(value);
+        if (!value.success) {
+          console.log(value.message);
+        }
+      })
       .catch((error) => console.log(error))
       .finally(() => console.log(`DefaultService.download.finally`));
   };

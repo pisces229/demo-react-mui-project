@@ -33,7 +33,7 @@ export const App01P02Page = () => {
     }
   });
 
-  const callbackQuery = useCallback(() => {
+  const callbackQuery = useCallback((form: FormState) => {
     useProgressComponentStore.getState().open();
     console.log(form);
     AppService.query(form.row)
@@ -45,8 +45,7 @@ export const App01P02Page = () => {
       }
     })
     .finally(() => useProgressComponentStore.getState().close());
-  }, [form]);
-
+  }, []);
   useEffect(() => {
     console.log('App01P02Page.initial');
     if (!initialRef.current) {
@@ -63,7 +62,7 @@ export const App01P02Page = () => {
         }
         case App01P02Action.Modify: {
           console.log('App01P02Action.Modify');
-          callbackQuery();
+          callbackQuery(form);
           break;
         }
       }
@@ -97,7 +96,7 @@ export const App01P02Page = () => {
         .then((response) => {
           if (response.data.success) {
             useMessageComponentStore.getState().success(response.data.message);
-            callbackQuery();
+            callbackQuery(form);
           } else {
             useMessageComponentStore.getState().warning(response.data.message);
           }
