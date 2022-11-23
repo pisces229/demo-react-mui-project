@@ -15,13 +15,11 @@ const listToArray = (fileList: FileList | null) => {
 };
 
 const download = async (response: AxiosResponse<Blob, any>) => {
-  console.log(response.headers['content-type']);
-  console.log(response);
+  console.log(response.headers);
+  console.log(response.data);
   if (response.headers['content-type'] !== 'application/json; charset=utf-8') {
-    const contentDispositionValues =
-      response.headers['content-disposition']?.split(';');
+    const contentDispositionValues = response.headers['content-disposition']?.split(';');
     let filename = 'download';
-    console.log(response.headers);
     contentDispositionValues?.forEach((f) => {
       if (f.indexOf('filename') > -1) {
         let texts = f.split('=');
@@ -30,8 +28,8 @@ const download = async (response: AxiosResponse<Blob, any>) => {
         }
       }
     });
-    console.log(response.data);
     saveAs(response.data, filename);
+
     // const a = window.document.createElement('a');
     // a.href = window.URL.createObjectURL(new Blob([response.data]));
     // a.download = filename;
@@ -41,8 +39,24 @@ const download = async (response: AxiosResponse<Blob, any>) => {
     let value: CommonOutputModel<string> = { success: true, message: '', data: '' };
     return Promise.resolve(value);
   } else {
-    // console.log(response);
     return response.data.text().then((value) => {
+      console.log(value);
+      return JSON.parse(value);
+    });
+  }
+};
+
+const open = async (response: AxiosResponse<Blob, any>) => {
+  console.log(response.headers);
+  console.log(response.data);
+  if (response.headers['content-type'] !== 'application/json; charset=utf-8') {
+    let fileURL = window.URL.createObjectURL(new Blob([response.data], { type: response.data.type }));
+    window.open(fileURL);
+    let value: CommonOutputModel<string> = { success: true, message: '', data: '' };
+    return Promise.resolve(value);
+  } else {
+    return response.data.text().then((value) => {
+      console.log(value);
       return JSON.parse(value);
     });
   }
@@ -51,4 +65,5 @@ const download = async (response: AxiosResponse<Blob, any>) => {
 export const FileUtil = {
   listToArray,
   download,
+  open,
 };

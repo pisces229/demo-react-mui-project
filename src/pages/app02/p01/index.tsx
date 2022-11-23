@@ -92,7 +92,11 @@ export const App02P01Page = () => {
 
   const onClickDownload = async () => {
     DefaultService.download({ filename: 'test' })
-      .then((response) => FileUtil.download(response))
+    // DefaultService.download({ filename: undefined })
+      .then((response) => {
+        return FileUtil.download(response);
+        // return FileUtil.open(response);
+      })
       .then((value: CommonOutputModel<string>) => {
         console.log(value);
         if (!value.success) {
