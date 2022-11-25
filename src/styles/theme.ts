@@ -6,6 +6,17 @@ export default createTheme({
       defaultProps: {
         size: 'small',
         sx: {
+          fontSize: '0.85rem',
+          fontWeight: 'bold',
+          color: '#6D6D6D',
+          backgroundColor: '#E1E1E1',
+          // border: '0.05rem solid #E1E1E1',
+          textTransform: 'none',
+          // boxShadow: 'none',
+          '&:hover': {
+            color: '#FFFFFF',
+            backgroundColor: '#79858B',
+          },
         },
       },
       styleOverrides: {
@@ -16,6 +27,8 @@ export default createTheme({
       defaultProps: {
         size: 'small',
         sx: {
+          fontSize: '0.85rem',
+          backgroundColor: '#FFFFFF',
         },
       },
       styleOverrides: {
@@ -26,6 +39,8 @@ export default createTheme({
       defaultProps: {
         size: 'small',
         sx: {
+          fontSize: '0.85rem',
+          backgroundColor: '#FFFFFF',
         },
       },
       styleOverrides: {
@@ -36,6 +51,7 @@ export default createTheme({
       defaultProps: {
         size: 'small',
         sx: {
+          fontSize: '0.85rem',
         },
       },
       styleOverrides: {
@@ -46,6 +62,7 @@ export default createTheme({
       defaultProps: {
         size: 'small',
         sx: {
+          fontSize: '0.85rem',
         },
       },
       styleOverrides: {
@@ -56,6 +73,7 @@ export default createTheme({
       defaultProps: {
         size: 'small',
         sx: {
+          fontSize: '0.85rem',
         },
       },
       styleOverrides: {
@@ -66,11 +84,11 @@ export default createTheme({
       defaultProps: {
         size: 'small',
         sx: {
+          fontSize: '0.85rem',
         },
       },
       styleOverrides: {
       },
-      variants: [],
     },
     MuiTableBody: {
       defaultProps: {

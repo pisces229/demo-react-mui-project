@@ -1,18 +1,34 @@
-import { Button, Grid, Pagination, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+import { Button, Stack, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import produce from "immer";
-import { PaginationUtil } from "../../../utils/pagination";
+import {
+  CommonPageTitle,
+  CommonFormContainer,
+  CommonFormHeader,
+  CommonFormHeaderText,
+  commonFormTextStyle,
+  CommonGridTopContainer,
+  commonGridContainerStyle,
+  commonGridHeadCellStyle,
+  commonGridBodyStyle,
+  commonGridBodyCellStyle,
+  CommonLinkStyle,
+} from "../../../styles";
+import { PaginationComponent } from "../../../components/pagination";
 import { useProgressComponentStore } from "../../../stores/component/progress";
-import { AppService } from "../../../services/app";
+import { useMessageComponentStore } from "../../../stores/component/message";
+import { ConfirmComponent } from "../../../components/confirm";
+import { CompoentConfirmProp, initialCompoentConfirmProp } from "../../../components/confirm/prop";
 import { CommonPageState, initialCommonPageState } from "../../state";
-import { FormState, initialFormState, GridState } from "./state";
+import { AppService } from "../../../services/app";
+import { AppQueryInputModel } from "../../../services/app/model";
 import { useApp01P01ActionStore } from "../../../stores/page/app01/p01";
 import { App01P01Action } from "../../../stores/page/app01/p01/state";
 import { useApp01P02ActionStore } from "../../../stores/page/app01/p02";
 import { App01P02Action } from "../../../stores/page/app01/p02/state";
 import { ROUTE_APP01 } from "../../../routes/app01/route";
-import { useMessageComponentStore } from "../../../stores/component/message";
+import { FormState, initialFormState, GridState } from "./state";
 
 export const App01P01Page = () => {
   const navigate = useNavigate();
@@ -31,18 +47,22 @@ export const App01P01Page = () => {
       }
     }
   });
+  const [gridCheckbox, setGridCheckbox]= useState<boolean>(false);
   const [gridPage, setGridPage] = useState<CommonPageState>(initialCommonPageState);
   const [gridTotalCount, setGridTotalCount] = useState<number>();
   const [grid, setGrid] = useState<GridState[]>([]);
 
-  const callbackQuery = useCallback((form: FormState, page: CommonPageState) => {
+  const [compoentConfirmProp, setCompoentConfirmProp] =
+    useState<CompoentConfirmProp>(initialCompoentConfirmProp);
+
+  const callbackQuery = useCallback((form: AppQueryInputModel, page: CommonPageState) => {
     useProgressComponentStore.getState().open();
     AppService.queryGrid({ data: form, page: page })
     .then((response) => {
       if (response.data.success) {
         setGridPage(page);
         setGridTotalCount(response.data.data.totalCount);
-        setGrid(response.data.data.data.map((data) => ({ ...data, check: false })));
+        setGrid(response.data.data.data.map((data) => ({ ...data, checkbox: false })));
       }
     })
     .finally(() => useProgressComponentStore.getState().close());
@@ -74,9 +94,20 @@ export const App01P01Page = () => {
   };
   const onClickQuery = () => callbackQuery(form, gridPage);
   const onClickClear = async () => setForm(initialFormState);
+  const onClickGridRemoveConfirm = async () => {
+    if (grid.filter((o) => o.checkbox).length === 0) {
+      useMessageComponentStore.getState().warning('Please Choice Data');
+    } else {
+      setCompoentConfirmProp(produce((draft) => {
+        draft.display = true;
+        draft.message = 'Remove?';
+      }));
+    }
+  };
   const onClickGridRemove = async () => {
+    setCompoentConfirmProp(produce((draft) => { draft.display = false; }));
     useProgressComponentStore.getState().open();
-    AppService.remove(grid.filter((o) => o.check).map((o) => o.row))
+    AppService.remove(grid.filter((o) => o.checkbox).map((o) => o.row))
     .then((response) => {
       useMessageComponentStore.getState().success(response.data.message);
       callbackQuery(form, gridPage);
@@ -91,104 +122,120 @@ export const App01P01Page = () => {
   };
   return (
     <>
-      <h3>App01P01Page</h3>
-      <Grid container direction="row" justifyContent="right" alignItems="center">
-        <Grid item>
-          <Button variant="contained" onClick={onClickCreate}>Create</Button>
-          <Button variant="contained" onClick={onClickQuery}>Query</Button>
-          <Button variant="contained" onClick={onClickClear}>Clear</Button>
-        </Grid>
-      </Grid>
-      <Table>
-        <TableBody>
-          <TableRow>
-            <TableCell align="right">First</TableCell>
-            <TableCell>
-              <TextField
-                inputProps={{ maxLength: 10 }}
-                value={form.first}
-                onChange={async (event) =>
-                  setForm(produce((draft) => { draft.first = event.target.value; }))
-                }/>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell align="right">Second</TableCell>
-            <TableCell>
-              <TextField
-                inputProps={{ maxLength: 10 }}
-                value={form.second}
-                onChange={async (event) =>
-                  setForm(produce((draft) => { draft.second = event.target.value; }))
-                }/>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+      <CommonPageTitle>APP01</CommonPageTitle>
+      <CommonFormContainer>
+        <CommonFormHeader
+          direction="row"
+          justifyContent="space-between"
+          alignItems="baseline"
+          spacing={1}
+        >
+          <CommonFormHeaderText>【Query】</CommonFormHeaderText>
+          <Stack
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="center"
+            spacing={1}
+          >
+            <Button variant="contained" onClick={onClickCreate}>Create</Button>
+            <Button variant="contained" onClick={onClickQuery}>Query</Button>
+            <Button variant="contained" onClick={onClickClear}>Clear</Button>
+          </Stack>
+        </CommonFormHeader>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell align="right" sx={commonFormTextStyle}>First：</TableCell>
+              <TableCell align="left" sx={commonFormTextStyle}>
+                <TextField
+                  inputProps={{ maxLength: 10 }}
+                  value={form.first}
+                  onChange={async (event) =>
+                    setForm(produce((draft) => { draft.first = event.target.value; }))
+                  }/>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="right" sx={commonFormTextStyle}>Second：</TableCell>
+              <TableCell align="left" sx={commonFormTextStyle}>
+                <TextField
+                  inputProps={{ maxLength: 10 }}
+                  value={form.second}
+                  onChange={async (event) =>
+                    setForm(produce((draft) => { draft.second = event.target.value; }))
+                  }/>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </CommonFormContainer>
 
-      {gridTotalCount === 0 && <h3>No Data</h3>}
-      {!!gridTotalCount &&
+      {gridTotalCount &&
       <>
-        <Grid container direction="row" justifyContent="left" alignItems="center">
-          <Grid item>
-            <Button variant="contained" onClick={onClickGridRemove}>Remove</Button>
-          </Grid>
-        </Grid>
-        <TableContainer sx={{ maxHeight: 400 }}>
+        <CommonGridTopContainer
+          direction="row"
+          justifyContent="space-between"
+        >
+          <Stack
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="center"
+            spacing={1}
+          >
+            <Button variant="contained" onClick={onClickGridRemoveConfirm}>Remove</Button>
+          </Stack>
+          <PaginationComponent page={gridPage} totalCount={gridTotalCount}
+            onChange={(page) => { callbackQuery(form, page); }}
+          ></PaginationComponent>
+        </CommonGridTopContainer>
+        {/* <TableContainer sx={{ ..., maxHeight: '400px' }}> */}
+        <TableContainer sx={commonGridContainerStyle}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell>Index</TableCell>
-                <TableCell>Check</TableCell>
-                <TableCell>Row</TableCell>
-                <TableCell>First</TableCell>
-                <TableCell>Second</TableCell>
+                <TableCell align="center" sx={{ ...commonGridHeadCellStyle, width: '1rem' }}>
+                  <Switch
+                    checked={gridCheckbox}
+                    onChange={async (event) => {
+                      setGridCheckbox(event.target.checked);
+                      setGrid(produce((draft) => draft.forEach(f => f.checkbox = event.target.checked)));
+                    }}></Switch>
+                </TableCell>
+                <TableCell align="center" sx={{ ...commonGridHeadCellStyle, width: '2rem' }}>Edit</TableCell>
+                <TableCell align="center" sx={commonGridHeadCellStyle}>Row</TableCell>
+                <TableCell align="center" sx={commonGridHeadCellStyle}>First</TableCell>
+                <TableCell align="center" sx={commonGridHeadCellStyle}>Second</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {grid.map((gridItem, gridIndex) => (
-                <TableRow key={gridIndex}>
-                  <TableCell>
-                    <Button variant="contained" onClick={onClickGridEdit(gridIndex)}>{gridIndex}</Button>
-                  </TableCell>
-                  <TableCell>
+                <TableRow sx={commonGridBodyStyle} key={gridIndex}>
+                  <TableCell align="center" sx={commonGridBodyCellStyle}>
                     <Switch
-                      checked={gridItem.check}
+                      checked={gridItem.checkbox}
                       onChange={async (event) =>
-                        setGrid(produce((draft) => { draft[gridIndex].check = event.target.checked; }))
-                      }/>
-                  </TableCell>
-                  <TableCell>{gridItem.row}</TableCell>
-                  <TableCell>
-                    <TextField
-                      value={gridItem.first}
-                      onChange={async (event) =>
-                        setGrid(produce((draft) => { draft[gridIndex].first = event.target.value; }))
+                        setGrid(produce((draft) => { draft[gridIndex].checkbox = event.target.checked; }))
                       }
-                    />
+                    ></Switch>
                   </TableCell>
-                  <TableCell>
-                    <TextField
-                      value={gridItem.second}
-                      onChange={async (event) =>
-                        setGrid(produce((draft) => { draft[gridIndex].second = event.target.value; }))
-                      }/>
+                  <TableCell align="center" sx={commonGridBodyCellStyle}>
+                    <CommonLinkStyle onClick={onClickGridEdit(gridIndex)}>Edit</CommonLinkStyle>
                   </TableCell>
+                  <TableCell align="left" sx={commonGridBodyCellStyle}>{gridItem.row}</TableCell>
+                  <TableCell align="center" sx={commonGridBodyCellStyle}>{gridItem.first}</TableCell>
+                  <TableCell align="center" sx={commonGridBodyCellStyle}>{gridItem.second}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-        <Grid container direction="row" justifyContent="center" alignItems="center">
-          <Grid item>
-            <Pagination siblingCount={2}
-              count={PaginationUtil.pageCount(gridPage.pageSize, gridTotalCount)}
-              page={gridPage.pageNo}
-              onChange={async (event, page) => callbackQuery(form, { ...gridPage, pageNo: page })}
-            />
-          </Grid>
-        </Grid>
       </>}
+
+      <ConfirmComponent
+        {...compoentConfirmProp}
+        onAgree={onClickGridRemove}
+        onDisagree={() => setCompoentConfirmProp(produce((draft) => { draft.display = false; }))}
+      ></ConfirmComponent>
     </>
   );
 }

@@ -7,7 +7,7 @@ export const initialFormState: FormState = {
   second: '',
 }
 export interface GridState {
-  check: boolean;
+  checkbox: boolean;
   row: string;
   first: string;
   second: string;

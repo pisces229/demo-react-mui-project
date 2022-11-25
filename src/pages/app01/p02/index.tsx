@@ -1,7 +1,14 @@
-import { Button, Grid, Table, TableBody, TableCell, TableRow, TextField } from "@mui/material";
+import { Button, Grid, Stack, Table, TableBody, TableCell, TableRow, TextField } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import produce from "immer";
+import {
+  CommonPageTitle,
+  CommonFormContainer,
+  CommonFormHeader,
+  CommonFormHeaderText,
+  commonFormTextStyle,
+} from "../../../styles";
 import { AppService } from "../../../services/app";
 import { useProgressComponentStore } from "../../../stores/component/progress";
 import { FormState, initialFormState } from "./state";
@@ -33,10 +40,10 @@ export const App01P02Page = () => {
     }
   });
 
-  const callbackQuery = useCallback((form: FormState) => {
+  const callbackQuery = useCallback((row: string) => {
     useProgressComponentStore.getState().open();
-    console.log(form);
-    AppService.query(form.row)
+    console.log(row);
+    AppService.query(row)
     .then((response) => {
       if (response.data.success) {
         setForm(produce(() => response.data.data));
@@ -62,7 +69,7 @@ export const App01P02Page = () => {
         }
         case App01P02Action.Modify: {
           console.log('App01P02Action.Modify');
-          callbackQuery(form);
+          callbackQuery(form.row);
           break;
         }
       }
@@ -96,7 +103,7 @@ export const App01P02Page = () => {
         .then((response) => {
           if (response.data.success) {
             useMessageComponentStore.getState().success(response.data.message);
-            callbackQuery(form);
+            callbackQuery(form.row);
           } else {
             useMessageComponentStore.getState().warning(response.data.message);
           }
@@ -109,44 +116,57 @@ export const App01P02Page = () => {
   const onClickClear = async () => setForm(initialFormState);
   return (
     <>
-      <h3>App01P02Page</h3>
-      <Grid container direction="row" justifyContent="right" alignItems="center">
-        <Grid item>
-          <Button variant="contained" onClick={onClickBack}>Back</Button>
-          <Button variant="contained" onClick={onClickSave}>Save</Button>
-          <Button variant="contained" onClick={onClickClear}>Clear</Button>
-        </Grid>
-      </Grid>
-      <Table>
-        <TableBody>
-          <TableRow>
-            <TableCell align="right">Row</TableCell>
-            <TableCell>{form.row}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell align="right">First</TableCell>
-            <TableCell>
-              <TextField
-                inputProps={{ maxLength: 10 }}
-                value={form.first}
-                onChange={async (event) =>
-                  setForm(produce((draft) => { draft.first = event.target.value; }))
-                }/>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell align="right">Second</TableCell>
-            <TableCell>
-              <TextField
-                inputProps={{ maxLength: 10 }}
-                value={form.second}
-                onChange={async (event) =>
-                  setForm(produce((draft) => { draft.second = event.target.value; }))
-                }/>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+      <CommonPageTitle>APP01</CommonPageTitle>
+      <CommonFormContainer>
+        <CommonFormHeader
+          direction="row"
+          justifyContent="space-between"
+          alignItems="baseline"
+          spacing={1}
+        >
+          <CommonFormHeaderText>【Edis】</CommonFormHeaderText>
+          <Stack
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="center"
+            spacing={1}
+          >
+            <Button variant="contained" onClick={onClickBack}>Back</Button>
+            <Button variant="contained" onClick={onClickSave}>Save</Button>
+            <Button variant="contained" onClick={onClickClear}>Clear</Button>
+          </Stack>
+        </CommonFormHeader>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell align="right">Row</TableCell>
+              <TableCell>{form.row}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="right" sx={commonFormTextStyle}>First：</TableCell>
+              <TableCell sx={commonFormTextStyle}>
+                <TextField
+                  inputProps={{ maxLength: 10 }}
+                  value={form.first}
+                  onChange={async (event) =>
+                    setForm(produce((draft) => { draft.first = event.target.value; }))
+                  }/>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="right" sx={commonFormTextStyle}>Second：</TableCell>
+              <TableCell sx={commonFormTextStyle}>
+                <TextField
+                  inputProps={{ maxLength: 10 }}
+                  value={form.second}
+                  onChange={async (event) =>
+                    setForm(produce((draft) => { draft.second = event.target.value; }))
+                  }/>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </CommonFormContainer>
     </>
   );
 }

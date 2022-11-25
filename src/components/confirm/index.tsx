@@ -7,23 +7,28 @@ import {
   DialogActions,
 } from '@mui/material';
 
-const Component = (prop: {
+const Component = (props: {
   display: boolean;
   title: string;
   message: string;
-  onAgree: () => {};
-  onDisagree: () => {};
+  agree: string;
+  disagree: string;
+  onAgree: () => void;
+  onDisagree: () => void;
 }) => {
   return (
     <>
-      <Dialog open={prop.display} disableEscapeKeyDown={false}>
-        <DialogTitle>{prop.title}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{prop.message}</DialogContentText>
+      <Dialog
+        open={props.display} 
+        disableEscapeKeyDown={false}
+      >
+        {props.title && <DialogTitle sx={{ minWidth: '300px' }}>{props.title}</DialogTitle>}
+        <DialogContent sx={{ minWidth: '300px' }}>
+          <DialogContentText sx={{ fontSize: '1rem', fontWeight: 'bold' }}>{props.message}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={prop.onAgree}>Agree</Button>
-          <Button onClick={prop.onDisagree}>Disagree</Button>
+          <Button onClick={props.onAgree}>{props.agree}</Button>
+          <Button onClick={props.onDisagree}>{props.disagree}</Button>
         </DialogActions>
       </Dialog>
     </>

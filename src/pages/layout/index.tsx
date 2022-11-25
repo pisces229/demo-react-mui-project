@@ -1,22 +1,26 @@
 import {
   Box,
-  Button,
   Divider,
   Drawer,
-  IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
+  Stack,
 } from '@mui/material';
 import { Outlet, useNavigate } from 'react-router';
-import MenuIcon from '@mui/icons-material/Menu';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import { useState } from 'react';
-import { ScopeToolbar } from './style';
+import {
+  ScopeContainer,
+  ScopeTopButtonWrapper,
+  ScopeTopButton,
+  ScopeBarIconButton,
+  ScopeBarMenuIcon,
+} from './style';
 import { ErrorBoundaryComponent } from '../../components/error-boundary';
 import { ROUTE } from '../../routes/route';
 import { ROUTE_APP01 } from '../../routes/app01/route';
@@ -147,15 +151,36 @@ export const LayoutPage = () =>  {
   };
   return (
     <>
-      <h3>Default Layout</h3>
-      <ScopeToolbar>
-        <IconButton onClick={() => setState(true)}>
-          <MenuIcon />
-        </IconButton>
-        <Button variant="contained" onClick={() => navigate(ROUTE.LOGIN)}>
-          Quit
-        </Button>
-      </ScopeToolbar>
+      <ScopeContainer>
+        <Stack>
+          <Stack
+            sx={{ backgroundColor: "#79858B", padding: '0.5rem' }}
+            direction="row"
+            justifyContent="space-between"
+            alignItems="baseline"
+          >
+            <ScopeBarIconButton onClick={() => setState(true)}>
+              <ScopeBarMenuIcon></ScopeBarMenuIcon>
+            </ScopeBarIconButton>
+            <ScopeTopButtonWrapper>
+              <ScopeTopButton onClick={() => navigate(ROUTE.HOME)}>Sign Out</ScopeTopButton>
+            </ScopeTopButtonWrapper>
+          </Stack>
+          {/* <label style={{ wordBreak: 'break-all' }}>{authStore.token}</label> */}
+          <Stack
+            sx={{ padding: '1rem 2rem 1rem 2rem' }}
+            direction="column"
+            justifyContent="flex-start"
+            alignItems="center"
+            spacing={1}
+          >
+            <ErrorBoundaryComponent>
+              <Outlet/>
+            </ErrorBoundaryComponent>
+          </Stack>
+        </Stack>
+      </ScopeContainer>
+
       <Drawer anchor={'left'} open={state} onClose={() => setState(false)}>
         <Box
           sx={{ minWidth: 250 }}
@@ -199,9 +224,6 @@ export const LayoutPage = () =>  {
           </List>
         </Box>
       </Drawer>
-      <ErrorBoundaryComponent>
-        <Outlet/>
-      </ErrorBoundaryComponent>
     </>
   );
 }
