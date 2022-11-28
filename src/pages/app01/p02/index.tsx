@@ -40,10 +40,9 @@ export const App01P02Page = () => {
     }
   });
 
-  const callbackQuery = useCallback((row: string) => {
+  const callbackQuery = useCallback((requestData: string) => {
     useProgressComponentStore.getState().open();
-    console.log(row);
-    AppService.query(row)
+    AppService.query(requestData)
     .then((response) => {
       if (response.data.success) {
         setForm(produce(() => response.data.data));

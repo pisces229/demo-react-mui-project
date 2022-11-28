@@ -29,6 +29,7 @@ import { useApp01P02ActionStore } from "../../../stores/page/app01/p02";
 import { App01P02Action } from "../../../stores/page/app01/p02/state";
 import { ROUTE_APP01 } from "../../../routes/app01/route";
 import { FormState, initialFormState, GridState } from "./state";
+import { CommonPagedQueryInputModel } from "../../../services/model";
 
 export const App01P01Page = () => {
   const navigate = useNavigate();
@@ -55,14 +56,19 @@ export const App01P01Page = () => {
   const [compoentConfirmProp, setCompoentConfirmProp] =
     useState<CompoentConfirmProp>(initialCompoentConfirmProp);
 
-  const callbackQuery = useCallback((form: AppQueryInputModel, page: CommonPageState) => {
+  const callbackQuery = useCallback((requestData: CommonPagedQueryInputModel<AppQueryInputModel>) => {
     useProgressComponentStore.getState().open();
-    AppService.queryGrid({ data: form, page: page })
+    AppService.queryGrid(requestData)
     .then((response) => {
       if (response.data.success) {
-        setGridPage(page);
+        setGridPage(requestData.page);
         setGridTotalCount(response.data.data.totalCount);
         setGrid(response.data.data.data.map((data) => ({ ...data, checkbox: false })));
+        if (response.data.data.totalCount === 0) {
+          useMessageComponentStore.getState().info(response.data.message);
+        }
+      } else {
+        useMessageComponentStore.getState().warning(response.data.message);
       }
     })
     .finally(() => useProgressComponentStore.getState().close());
@@ -79,7 +85,7 @@ export const App01P01Page = () => {
         }
         case App01P01Action.Query: {
           console.log('App01P01Action.Query');
-          callbackQuery(form, gridPage);
+          callbackQuery({ data: form, page: gridPage });
           break;
         }
       }
@@ -92,8 +98,6 @@ export const App01P01Page = () => {
     useApp01P02ActionStore.getState().setAction(App01P02Action.Create);
     navigate(ROUTE_APP01.P02);
   };
-  const onClickQuery = () => callbackQuery(form, gridPage);
-  const onClickClear = async () => setForm(initialFormState);
   const onClickGridRemoveConfirm = async () => {
     if (grid.filter((o) => o.checkbox).length === 0) {
       useMessageComponentStore.getState().warning('Please Choice Data');
@@ -109,8 +113,12 @@ export const App01P01Page = () => {
     useProgressComponentStore.getState().open();
     AppService.remove(grid.filter((o) => o.checkbox).map((o) => o.row))
     .then((response) => {
-      useMessageComponentStore.getState().success(response.data.message);
-      callbackQuery(form, gridPage);
+      if (response.data.success) {
+        useMessageComponentStore.getState().success(response.data.message);
+        callbackQuery({ data: form, page: gridPage });
+      } else {
+        useMessageComponentStore.getState().warning(response.data.message);
+      }
     })
     .finally(() => useProgressComponentStore.getState().close());
   };
@@ -138,8 +146,8 @@ export const App01P01Page = () => {
             spacing={1}
           >
             <Button variant="contained" onClick={onClickCreate}>Create</Button>
-            <Button variant="contained" onClick={onClickQuery}>Query</Button>
-            <Button variant="contained" onClick={onClickClear}>Clear</Button>
+            <Button variant="contained" onClick={() => callbackQuery({ data: form, page: gridPage })}>Query</Button>
+            <Button variant="contained" onClick={() => setForm(initialFormState)}>Clear</Button>
           </Stack>
         </CommonFormHeader>
         <Table>
@@ -185,7 +193,7 @@ export const App01P01Page = () => {
             <Button variant="contained" onClick={onClickGridRemoveConfirm}>Remove</Button>
           </Stack>
           <PaginationComponent page={gridPage} totalCount={gridTotalCount}
-            onChange={(page) => { callbackQuery(form, page); }}
+            onChange={(page) => { callbackQuery({ data: form, page: page }); }}
           ></PaginationComponent>
         </CommonGridTopContainer>
         {/* <TableContainer sx={{ ..., maxHeight: '400px' }}> */}
