@@ -30,6 +30,9 @@ export const CommonFormHeaderText = styled('div')({
   fontWeight: 'bold',
   textAlign: 'left',
 });
+export const commonFormRowStyle = {
+  height: '3rem',
+};
 export const commonFormTextStyle = {
   padding: '0.25rem',
   border: 'none',
@@ -53,7 +56,7 @@ export const commonGridHeadCellStyle = {
   border: '0.05rem solid #FFFFFF',
   backgroundColor: '#E9E9E9',
 };
-export const commonGridBodyStyle = {
+export const commonGridBodyRowStyle = {
   padding: '0.25rem',
   border: '0.05rem solid #FFFFFF',
   '&:nth-of-type(odd)': {

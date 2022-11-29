@@ -7,11 +7,12 @@ import {
   CommonFormContainer,
   CommonFormHeader,
   CommonFormHeaderText,
+  commonFormRowStyle,
   commonFormTextStyle,
   CommonGridTopContainer,
   commonGridContainerStyle,
   commonGridHeadCellStyle,
-  commonGridBodyStyle,
+  commonGridBodyRowStyle,
   commonGridBodyCellStyle,
   CommonLinkStyle,
 } from "../../../styles";
@@ -152,7 +153,7 @@ export const App01P01Page = () => {
         </CommonFormHeader>
         <Table>
           <TableBody>
-            <TableRow>
+            <TableRow sx={commonFormRowStyle}>
               <TableCell align="right" sx={commonFormTextStyle}>First：</TableCell>
               <TableCell align="left" sx={commonFormTextStyle}>
                 <TextField
@@ -163,7 +164,7 @@ export const App01P01Page = () => {
                   }/>
               </TableCell>
             </TableRow>
-            <TableRow>
+            <TableRow sx={commonFormRowStyle}>
               <TableCell align="right" sx={commonFormTextStyle}>Second：</TableCell>
               <TableCell align="left" sx={commonFormTextStyle}>
                 <TextField
@@ -217,7 +218,7 @@ export const App01P01Page = () => {
             </TableHead>
             <TableBody>
               {grid.map((gridItem, gridIndex) => (
-                <TableRow sx={commonGridBodyStyle} key={gridIndex}>
+                <TableRow sx={commonGridBodyRowStyle} key={gridIndex}>
                   <TableCell align="center" sx={commonGridBodyCellStyle}>
                     <Switch
                       checked={gridItem.checkbox}

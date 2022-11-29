@@ -7,6 +7,7 @@ import {
   CommonFormContainer,
   CommonFormHeader,
   CommonFormHeaderText,
+  commonFormRowStyle,
   commonFormTextStyle,
 } from "../../../styles";
 import { AppService } from "../../../services/app";
@@ -137,11 +138,11 @@ export const App01P02Page = () => {
         </CommonFormHeader>
         <Table>
           <TableBody>
-            <TableRow>
+            <TableRow sx={commonFormRowStyle}>
               <TableCell align="right">Row</TableCell>
               <TableCell>{form.row}</TableCell>
             </TableRow>
-            <TableRow>
+            <TableRow sx={commonFormRowStyle}>
               <TableCell align="right" sx={commonFormTextStyle}>First：</TableCell>
               <TableCell sx={commonFormTextStyle}>
                 <TextField
