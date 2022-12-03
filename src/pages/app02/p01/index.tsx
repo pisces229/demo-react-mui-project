@@ -56,7 +56,7 @@ export const App02P01Page = () => {
     }
   };
   const onClickSignOut = async () => {
-    await DefaultService.signOut()
+    await DefaultService.signOut(authStore.token)
       .then((response) => {
         console.log(response);
         authStore.setToken('');

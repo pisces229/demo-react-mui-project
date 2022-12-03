@@ -163,7 +163,7 @@ export const LayoutPage = () =>  {
               <ScopeBarMenuIcon></ScopeBarMenuIcon>
             </ScopeBarIconButton>
             <ScopeTopButtonWrapper>
-              <ScopeTopButton onClick={() => navigate(ROUTE.HOME)}>Sign Out</ScopeTopButton>
+              <ScopeTopButton onClick={() => navigate(ROUTE.LOGIN)}>Sign Out</ScopeTopButton>
             </ScopeTopButtonWrapper>
           </Stack>
           {/* <label style={{ wordBreak: 'break-all' }}>{authStore.token}</label> */}

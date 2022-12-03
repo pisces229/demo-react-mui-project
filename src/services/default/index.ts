@@ -16,9 +16,10 @@ export const DefaultService = {
     defaultAxios.post<CommonOutputModel<string>>(
       `/${controller}/refresh`,
       postData),
-  signOut: () =>
+  signOut: (postData: string) =>
     defaultAxios.post(
-      `/${controller}/signOut`),
+      `/${controller}/signOut`,
+      postData),
 
   valueHttpGet: (value: string) =>
     authenticateAxios.get<string>(
