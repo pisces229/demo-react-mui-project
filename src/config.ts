@@ -13,6 +13,7 @@ switch (process.env.REACT_APP_ENV) {
   case 'production': {
     CONFIG.ENVIRONMENT = 'PRODUCTION';
     CONFIG.ENDPOINT = 'https://localhost:9110';
+    //CONFIG.ENDPOINT = 'https://localhost:8443';
     break;
   }
   default: {
