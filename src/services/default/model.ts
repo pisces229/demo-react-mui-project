@@ -1,3 +1,5 @@
+import { CommonPageInputModel } from "../model";
+
 export interface DefaultJsonInputModel {
   text: string;
   value: number;
@@ -24,4 +26,10 @@ export interface DefaultJsonOutputModel {
 }
 export interface DefaultDownloadInputModel {
   filename?: string;
+}
+export interface DefaultJsonPageInputModel extends CommonPageInputModel {
+  text: string;
+  value: number;
+  date: Date;
+  values: string[];
 }

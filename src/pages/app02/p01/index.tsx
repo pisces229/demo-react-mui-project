@@ -116,9 +116,21 @@ export const App02P01Page = () => {
       .catch((error) => console.log(error))
       .finally(() => console.log(`DefaultService.download.finally`));
   };
-
-  const onClickCommonPagedQuery = () => {
-    DefaultService.commonPagedQuery({
+  const onClickCommonPagedQueryGet = () => {
+    DefaultService.commonPagedQueryGet({
+      pageNo: 1,
+      pageSize: 10,
+      text: '[Test]',
+      value: 9,
+      date: new Date(),
+      values: ['1','A'],
+    })
+    .then((response) => console.log(response))
+    .catch((error) => console.log(error))
+    .finally(() => console.log(`DefaultService.commonPagedQuery.finally`));
+  };
+  const onClickCommonPagedQueryPost = () => {
+    DefaultService.commonPagedQueryPost({
       page: { pageNo: 1, pageSize: 10 },
       data: { text: '[Test]', value: 9, date: new Date() }
     })
@@ -190,7 +202,8 @@ export const App02P01Page = () => {
           <Button variant="contained" onClick={onClickUpload}>Upload</Button>&nbsp;
         </Grid>
         <Grid item xs={1}>
-          <Button variant="contained" onClick={onClickCommonPagedQuery}>Paged Query</Button>&nbsp;
+          <Button variant="contained" onClick={onClickCommonPagedQueryGet}>Paged Query Get</Button>&nbsp;
+          <Button variant="contained" onClick={onClickCommonPagedQueryPost}>Paged Query Post</Button>&nbsp;
           <Button variant="contained" onClick={onClickMultiple}>Multiple</Button>&nbsp;
           <Button variant="contained" onClick={onClickMultipleAll}>Multiple All</Button>&nbsp;
         </Grid>

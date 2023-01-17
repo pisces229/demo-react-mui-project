@@ -1,6 +1,6 @@
 import { authenticateAxios, defaultAxios } from "../axios";
 import { CommonOutputModel, CommonPagedQueryInputModel, CommonPagedQueryOutputModel } from "../model";
-import { DefaultDownloadInputModel, DefaultJsonInputModel, DefaultJsonOutputModel, DefaultSignInInputModel } from "./model";
+import { DefaultDownloadInputModel, DefaultJsonInputModel, DefaultJsonOutputModel, DefaultJsonPageInputModel, DefaultSignInInputModel } from "./model";
 
 const controller = 'default';
 
@@ -37,9 +37,13 @@ export const DefaultService = {
     authenticateAxios.post<CommonOutputModel<DefaultJsonOutputModel>>(
       `/${controller}/jsonHttpPost`,
       value),
-  commonPagedQuery: (value: CommonPagedQueryInputModel<DefaultJsonInputModel>) =>
+  commonPagedQueryGet: (value: DefaultJsonPageInputModel) =>
+    authenticateAxios.get<CommonPagedQueryOutputModel<DefaultJsonOutputModel>>(
+      `/${controller}/commonPagedQueryGet`,
+      { params: value }),
+  commonPagedQueryPost: (value: CommonPagedQueryInputModel<DefaultJsonInputModel>) =>
     authenticateAxios.post<CommonPagedQueryOutputModel<DefaultJsonOutputModel>>(
-      `/${controller}/commonPagedQuery`,
+      `/${controller}/commonPagedQueryPost`,
       value),
   download: (value: DefaultDownloadInputModel) =>
     authenticateAxios.post<Blob>(
